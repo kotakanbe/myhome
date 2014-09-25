@@ -1,0 +1,104 @@
+
+" source ~/.vimrc
+map S :source ~/.vimperatorrc<cr>
+
+" move
+map j 5<C-e>
+map k 5<C-y>
+map <A-j> 30<C-e>
+map <A-k> 30<C-y>
+map <A-l> 30l
+map <A-h> 30h
+"map <BS> <A-Left>
+
+"tab
+map t :tabopen google 
+"map o :open google 
+map <S-h> <A-Left>
+map <S-l> <A-Right>
+map <C-h> gT
+map <C-l> gt 
+map <C-S-l> :tabmove! +1<CR>
+map <C-S-h>  :tabmove! -1<CR>
+set! browser.tabs.closeWindowWithLastTab=false
+
+" focus
+set focuscontent
+
+" commandline
+set showmode
+style -name commandline-ime chrome://* #liberator-commandline-command input {ime-mode: inactive;}
+
+"Hint mode
+set hintchars=asdfjklgh
+"hi Hint font-family: Arial; font-size: 15px; font-weight: bold; text-transform: uppercase; color: white; background-color: #dd2222; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding: 0px 1px 0px 1px;
+"hi HintActive -append background-color: #9acd32; color: #556b2f;
+"hi HintElem background-color: #fffacd; color: #8b4513;
+"hi PromptText background: #4682b4; color: white;
+"hi ModeMsg -append background: #d2691e;
+
+" about search
+set hlsearch
+set incsearch
+set ic
+
+
+" copy & paste
+
+inoremap <C-a> <Insert><C-a><Insert>
+
+"noremap <C-a> <C-v><C-a>
+"inoremap <C-a> <C-v><C-a>
+"cnoremap <C-a> <C-v><C-a>
+noremap <C-c> <C-v><C-c>
+inoremap <C-c> <C-v><C-c>
+cnoremap <C-c> <C-v><C-c>
+inoremap <C-x> <S-Del>
+cnoremap <C-x> <S-Del>
+inoremap <C-z> <C-v><C-z>
+cnoremap <C-z> <C-v><C-z>
+inoremap <C-v> <S-Insert>
+cnoremap <C-v> <S-Insert> 
+
+" 
+abbreviate zabbix https://nasa.future.co.jp/zabbix/
+
+
+" s-ESC
+"autocmd LocationChange owa\\.future\\.co\\.jp js modes.passAllKeys = true
+
+set editor="gvim -f"
+""set editor="gnome-terminal --disable-factoy -x vim "
+
+" copy.js の設定
+javascript <<EOM
+
+liberator.globalVariables.copy_templates = [
+    { label: 'titleAndURL', value: '%TITLE%\n%URL%' },
+    { label: 'title', value: '%TITLE%' },
+    { label: 'anchor', value: '<a href="%URL%">%TITLE%</a>' },
+    { label: 'selanchor', value: '<a href="%URL%" title="%TITLE%">%SEL%</a>' },
+    { label: 'htmlblockquote', value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>' },
+    { label: 'ggl', value: 'Copy title & goo.gl', custom: function() { return '「' + buffer.title + '」 ' + getShortUrl(); }
+    }
+];
+var getShortUrl = function() {
+    var longUrl = content.document.location.href;
+    var googl = {
+        'url' : 'https://www.googleapis.com/urlshortener/v1/url',
+        'method' : 'POST',
+        'contentType' : 'application/json',
+        'longJson' : '{ "longUrl" : "' + longUrl + '" }'
+    };
+    var request = new XMLHttpRequest();
+    request.open(googl.method, googl.url, false);
+    request.setRequestHeader('Content-Type', googl.contentType);
+    request.send(googl.longJson);
+    return JSON.parse(request.responseText).id;
+};
+
+EOM
+
+nmap ,cu :copy<Space>ggl<CR>
+nmap ,ct :copy<Space>title<CR>
+
