@@ -48,6 +48,8 @@ NeoBundle 'https://github.com/AndrewRadev/splitjoin.vim.git'
 "nmap ss :SplitjoinSplit<cr>
 "nmap sj :SplitjoinJoin<cr>
 
+" Scala
+NeoBundle 'https://github.com/derekwyatt/vim-scala.git'
 
 "
 NeoBundle 'https://github.com/ddollar/nerdcommenter.git'
