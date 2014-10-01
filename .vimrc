@@ -205,7 +205,10 @@ let g:mapleader = ","
 nmap <leader>w :w!<cr>
 
 " Fast editing of the .vimrc
-map <leader>e :e! ~/.vimrc<cr>
+map <leader>ee :e! ~/.vimrc<cr>
+map <leader>ev :e! ~/.vimperatorrc<cr>
+map <leader>ez :e! ~/.zshrc<cr>
+map <leader>et :e! ~/.tmux.conf<cr>
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vimrc

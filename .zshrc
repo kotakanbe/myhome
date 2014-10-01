@@ -164,6 +164,7 @@ alias -g N='| growlnotify -s -t "command" -m "finished."'
 # for http-proxy alias -g P=' --http-proxy=http://10.42.5.10:8000'
 
 
+# http://qiita.com/uchiko/items/f6b1528d7362c9310da0
 function peco-select-history() {
     local tac
     if which tac > /dev/null; then
@@ -171,7 +172,7 @@ function peco-select-history() {
     else
         tac="tail -r"
     fi
-    BUFFER=$(history -n 1 | \
+    BUFFER=$(\history -n 1 | \
         eval $tac | \
         peco --query "$LBUFFER")
     CURSOR=$#BUFFER
@@ -179,6 +180,7 @@ function peco-select-history() {
 }
 zle -N peco-select-history
 bindkey '^r' peco-select-history
+
 
 
 # C-jで下のディレクトリに移動する
@@ -199,30 +201,55 @@ zle reset-prompt
 zle -N cddown_dir
 bindkey '^j' cddown_dir
 
-# Find and cd
-function peco-find-cd() {
+
+# Fuzzy Find and cd
+function peco-fuzzy-find-cd() {
   local FILENAME="$1"
 
   if [ -z "$FILENAME" ] ; then
-    echo "Usage: peco-find-cd <FILENAME>" >&2
-    return 1
+    FILENAME="*"
+  else
+    FILENAME="*${FILENAME}*"
   fi
 
-  local DIR=$(find ~ -maxdepth 5 -name ${FILENAME} | peco | head -n 1)
+  #local DIR=$(find ~ -maxdepth 5 -iname "${FILENAME}" -type d | peco | head -n 1)
+  local DIR=$(find ~ -iname "${FILENAME}" -type d | peco | head -n 1)
 
   if [ -n "$DIR" ] ; then
     DIR=${DIR%/*}
-    echo "pushd \"$DIR\""
+    #echo "pushd \"$DIR\""
     pushd "$DIR"
   fi
 }
-alias fcd='peco-find-cd'
+alias ff='peco-fuzzy-find-cd'
+zle -N peco-fuzzy-find-cd
+bindkey '^f' peco-fuzzy-find-cd
 
 
-function agvim () {
+# http://qiita.com/fmy/items/b92254d14049996f6ec3
+function vim-ag () {
   vim $(ag $@ | peco --query "$LBUFFER" | awk -F : '{print "-c " $2 " " $1}')
 }
+alias vg='vim-ag'
 
+# find | peco | vim
+function vim-find () {
+  #vim $(find ~ -maxdepth 10 | peco --query "$LBUFFER")
+  vim $(find . | peco --query "$LBUFFER")
+}
+alias vf='vim-find'
+
+# find -atime | peco | vim
+function vim-find-recent-accessed() {
+  vim $(find . -not -path "*/.*" -atime -3 | peco --query "$LBUFFER")
+}
+
+# find -mtime | peco | vim
+function vim-find-recent-modified() {
+  vim $(find . -not -path "*/.*" -mtime -3 | peco --query "$LBUFFER")
+}
+
+# export
 export PATH=$HOME/bin:$PATH
-
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
