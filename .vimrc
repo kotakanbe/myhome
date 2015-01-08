@@ -43,6 +43,8 @@ let g:mapleader = ","
 " Fast saving
 nmap <leader>w :w!<cr>
 
+nmap <leader>, :redraw!<cr>
+
 " Fast editing of the .vimrc
 map <leader>ee :e! ~/.vimrc<cr>
 map <leader>ev :e! ~/.vimperatorrc<cr>
@@ -177,7 +179,11 @@ nnoremap <silent> [unite]g  :<C-u>Unite grep<CR>
 nnoremap <silent> [unite]t  :<C-u>UniteWithCursorWord -buffer-name=tag tag<CR>
 nnoremap <silent> [unite]h  :<C-u>Unite help<CR>
 nnoremap <silent> [unite]t  :<C-u>Unite tag<CR>
-"nnoremap <silent> [unite]s  :<C-u>Unite snippet<CR>
+
+let g:unite_source_history_yank_enable = 1
+nnoremap <silent> [unite]y  :<C-u>Unite history/yank<CR>
+
+nnoremap <silent> [unite]s  :<C-u>Unite snippet<CR>
 
 "nnoremap <silent> [unite]r  :<C-u>Unite rails/
 "nnoremap <silent> [unite]c  :<C-u>Unite rails/controller<CR>
@@ -243,6 +249,9 @@ let g:gofmt_command = 'goimports'
 au BufWritePre *.go Fmt
 au BufNewFile,BufRead *.go set sw=4 noexpandtab ts=4 completeopt=menu,preview
 au FileType go compiler go
+
+let g:godef_split=1
+nnoremap <silent> <Leader>gd :GoDef<CR>
 " }}}
 
 " Scala
@@ -257,6 +266,7 @@ vmap <C-_> <Plug>NERDCommenterToggle
 NeoBundle 'https://github.com/scrooloose/syntastic.git'
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_loc_list=2
+" when show error list, type :Errors
 
 NeoBundle 'https://github.com/terryma/vim-multiple-cursors.git'
 
@@ -268,8 +278,13 @@ set t_Co=256
 
 "NeoBundle 'https://github.com/jaxbot/selective-undo.vim.git'
 
-NeoBundle 'https://github.com/zeekay/vice-colorful.git'
-colorscheme molokai-dark
+NeoBundle 'https://github.com/altercation/vim-colors-solarized.git'
+set background=dark
+"set background=light
+colorscheme solarized
+
+"NeoBundle 'https://github.com/zeekay/vice-colorful.git'
+"colorscheme molokai-dark
 
 "NeoBundle 'https://github.com/tomasr/molokai.git'
 "colorscheme molokai
