@@ -259,3 +259,4 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
 
+alias tmux='tmux -2'

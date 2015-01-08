@@ -272,19 +272,21 @@ NeoBundle 'https://github.com/terryma/vim-multiple-cursors.git'
 
 "NeoBundle 'https://github.com/mhinz/vim-signify.git'
 
-NeoBundle 'https://github.com/bling/vim-airline.git'
-let g:airline#extensions#tabline#enabled = 1
-set t_Co=256
 
 "NeoBundle 'https://github.com/jaxbot/selective-undo.vim.git'
 
-NeoBundle 'https://github.com/altercation/vim-colors-solarized.git'
-set background=dark
-"set background=light
-colorscheme solarized
+set t_Co=256
+NeoBundle 'https://github.com/bling/vim-airline.git'
+let g:airline#extensions#tabline#enabled = 1
 
-"NeoBundle 'https://github.com/zeekay/vice-colorful.git'
-"colorscheme molokai-dark
+"NeoBundle 'https://github.com/altercation/vim-colors-solarized.git'
+"set background=dark
+"set background=light
+"colorscheme solarized
+
+
+NeoBundle 'https://github.com/zeekay/vice-colorful.git'
+colorscheme molokai-dark
 
 "NeoBundle 'https://github.com/tomasr/molokai.git'
 "colorscheme molokai
