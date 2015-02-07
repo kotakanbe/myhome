@@ -137,16 +137,18 @@ endtry
 
 "}}}
 
-" motion
+" motion {{{
 "NeoBundle 'https://github.com/Lokaltog/vim-easymotion.git'
 NeoBundle 'https://github.com/justinmk/vim-sneak.git'
 "nmap ; <Plug>SneakNext
 nmap - <Plug>SneakPrevious
+" }}}
 
-" filer
+" filer {{{
 NeoBundle 'https://github.com/Shougo/vimfiler.vim.git'
 NeoBundle 'https://github.com/thinca/vim-qfreplace.git'
 NeoBundle 'https://github.com/kien/ctrlp.vim.git'
+" }}}
 
 "  unite {{{
 NeoBundle 'https://github.com/Shougo/unite.vim.git'
@@ -222,22 +224,114 @@ vnoremap /g y:Unite grep::-iHRn:<C-R>=escape(@", '\\.*$^[]')<CR><CR>
 
 " }}}
 
-" Ctags
-NeoBundle 'https://github.com/xolox/vim-misc.git'
-NeoBundle 'https://github.com/xolox/vim-easytags.git'
-let g:easytags_file='~/.vim/tags'
 
 " programing
+
 "NeoBundle 'https://github.com/vim-scripts/taglist.vim.git'
 NeoBundle 'https://github.com/houtsnip/vim-emacscommandline.git'
 NeoBundle 'https://github.com/thinca/vim-ft-svn_diff.git'
 "NeoBundle 'https://github.com/vim-scripts/DirDiff.vim.git'
 NeoBundle 'https://github.com/AndrewRadev/splitjoin.vim.git'
+NeoBundle "tpope/vim-surround"
 "nmap ss :SplitjoinSplit<cr>
 "nmap sj :SplitjoinJoin<cr>
 "
 NeoBundle 'https://github.com/thinca/vim-quickrun.git'
 
+" => for refactoring {{{
+""""""""""""""""""""""""""""""
+" Ctrl-nで選択肢て一括置換とか
+NeoBundle 'https://github.com/terryma/vim-multiple-cursors.git'
+
+" リファクタリングで使えそうなんだけどバギー 2015/2/8
+"NeoBundle "pelodelfuego/vim-swoop"
+
+"NeoBundle 'https://github.com/thinca/vim-qfreplace.git'
+" }}}
+
+" => for ctags {{{
+""""""""""""""""""""""""""""""
+NeoBundle 'https://github.com/xolox/vim-misc.git'
+"NeoBundle 'https://github.com/xolox/vim-easytags.git'
+
+"let g:easytags_file='~/.vim/tags'
+set tags=tags;/
+"set tags='~/.vim/tags'
+
+" tags-and-searchはtに統一
+" http://whileimautomaton.net/2008/08/vimworkshop3-kana-presentation
+
+" tを解除
+nnoremap t  <Nop>
+
+nnoremap tc  :!/usr/bin/ctags<space>-R<space>.<space>--exclude=target<space>--exclude=vendor<CR>
+
+"「飛ぶ」
+nnoremap tt  <C-]>
+nnoremap tT  g]
+"「進む」
+nnoremap tj  :<C-u>tag<CR>
+"「戻る」
+nnoremap tk  :<C-u>pop<CR>
+"履歴一覧
+" nnoremap tl  :<C-u>tags<CR>
+
+nnoremap tg  :tag<space>
+" タグが複数の時にリストを表示
+nnoremap ts  :tselect<Return>
+nnoremap tS  :tselect<space>/^
+
+" タグが複数の時にリストを表示
+nnoremap tn  :tnext<Return>
+nnoremap tp  :tprevious<Return>
+
+NeoBundle 'majutsushi/tagbar'
+nnoremap tb  :TagbarToggle<Return>
+
+"nnoremap ,L  :tlast<Return>
+"nnoremap ,F  :tfirst<Return>
+"
+"set tags=./tags,tags
+
+"NeoBundle 'vim-scripts/taglist.vim'
+"let Tlist_Show_One_File = 1             "現在表示中のファイルのみのタグしか表示しない
+"let Tlist_Use_Right_Window = 1          "右側にtag listのウインドうを表示する
+"let Tlist_Exit_OnlyWindow = 1           "taglistのウインドウだけならVimを閉じる
+"nnoremap <silent> tl :TlistToggle<CR>   "tlでtaglistウインドウを開閉
+
+" Tlist
+"nnoremap tl  :TlistToggle<Return><C-w>=
+
+" Triniy
+" nnoremap tr  :TrinityToggleAll<Return><C-w>=
+"}}}
+
+" commenter {{{
+NeoBundle 'https://github.com/ddollar/nerdcommenter.git'
+let NERDSpaceDelims = 1
+nmap <C-_> <Plug>NERDCommenterToggle
+vmap <C-_> <Plug>NERDCommenterToggle
+" }}}
+
+" syntastic {{{
+NeoBundle 'https://github.com/scrooloose/syntastic.git'
+let g:syntastic_enable_signs=1
+let g:syntastic_auto_loc_list=2
+" when show error list, type :Errors
+" syntastic }}}
+
+" vm-codefmt https://github.com/google/vim-codefmt {{{
+NeoBundle 'google/vim-maktaba'
+NeoBundle 'google/vim-codefmtlib'
+NeoBundle 'google/vim-codefmt'
+" Also add Glaive, which is used to configure codefmt's maktaba flags. See
+" `:help :Glaive` for usage.
+NeoBundle 'google/vim-glaive'
+call glaive#Install()
+" Optional: Enable codefmt's default mappings on the <Leader>= prefix.
+Glaive codefmt plugin[mappings]
+" }}}
+"
 " for golang {{{
 NeoBundle 'fatih/vim-go'
 NeoBundle 'dgryski/vim-godef'
@@ -254,25 +348,77 @@ let g:godef_split=1
 nnoremap <silent> <Leader>gd :GoDef<CR>
 " }}}
 
-" Scala
+" Scala {{{
 NeoBundle 'https://github.com/derekwyatt/vim-scala.git'
-
+" }}}
 "
-NeoBundle 'https://github.com/ddollar/nerdcommenter.git'
-let NERDSpaceDelims = 1
-nmap <C-_> <Plug>NERDCommenterToggle
-vmap <C-_> <Plug>NERDCommenterToggle
+" => neosnippet.vom {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'https://github.com/Shougo/neosnippet.vim.git'
+NeoBundle 'https://github.com/Shougo/neosnippet-snippets.git'
+NeoBundle 'https://github.com/glidenote/serverspec-snippets.git'
+let g:neosnippet#snippets_directory = [
+      \'~/.vim/snippets',
+      \'~/.vim/bundle/serverspec-snippets',
+      \]
 
-NeoBundle 'https://github.com/scrooloose/syntastic.git'
-let g:syntastic_enable_signs=1
-let g:syntastic_auto_loc_list=2
-" when show error list, type :Errors
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-NeoBundle 'https://github.com/terryma/vim-multiple-cursors.git'
+" SuperTab like snippets behavior.
+"imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"\ "\<Plug>(neosnippet_expand_or_jump)"
+"\: pumvisible() ? "\<C-n>" : "\<TAB>"
+"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"\ "\<Plug>(neosnippet_expand_or_jump)"
+"\: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
+"}}}
+
+
+" => JS section {{{
+""""""""""""""""""""""""""""""
+augroup javascript
+      autocmd FileType javascript
+	\ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
+augroup END
+"}}}
+
+" => Ruby section {{{
+""""""""""""""""""""""""""""""
+NeoBundle 'https://github.com/vim-ruby/vim-ruby.git'
+augroup ruby
+      autocmd FileType ruby
+        \   setlocal makeprg=ruby\ -cdw\ %
+        \|  setlocal errorformat=%f:%l:%m
+        \|  setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
+augroup END
+"}}}
+
+" => Python section {{{
+""""""""""""""""""""""""""""""
+augroup python
+      autocmd FileType python
+        \  setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
+augroup END
+"}}}
+
+" => Ruby section {{{
+""""""""""""""""""""""""""""""
+augroup markdown
+      autocmd FileType markdown
+        \ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
+augroup END
+"}}}
 
 "NeoBundle 'https://github.com/mhinz/vim-signify.git'
-
-
 "NeoBundle 'https://github.com/jaxbot/selective-undo.vim.git'
 
 set t_Co=256
@@ -304,13 +450,8 @@ NeoBundle 'scrooloose/nerdtree'
 let g:NERDTreeShowBookmarks=1		"起動時にBookmarkを表示
 nnoremap <silent> tr :NERDTree<CR>
 
-NeoBundle 'vim-scripts/taglist.vim'
-let Tlist_Show_One_File = 1             "現在表示中のファイルのみのタグしか表示しない
-let Tlist_Use_Right_Window = 1          "右側にtag listのウインドうを表示する
-let Tlist_Exit_OnlyWindow = 1           "taglistのウインドウだけならVimを閉じる
-nnoremap <silent> tl :TlistToggle<CR>   "tlでtaglistウインドウを開閉
 
-NeoBundle 'https://github.com/thinca/vim-qfreplace.git'
+"NeoBundle 'https://github.com/thinca/vim-qfreplace.git'
 
 " window
 "NeoBundle 'https://github.com/vim-scripts/ZoomWin.git'
@@ -356,139 +497,6 @@ autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
 "}}}
-
-" => neosnippet.vom {{{
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'https://github.com/Shougo/neosnippet.vim.git'
-NeoBundle 'https://github.com/Shougo/neosnippet-snippets.git'
-NeoBundle 'https://github.com/glidenote/serverspec-snippets.git'
-let g:neosnippet#snippets_directory = [
-      \'~/.vim/snippets',
-      \'~/.vim/bundle/serverspec-snippets',
-      \]
-
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-"imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: pumvisible() ? "\<C-n>" : "\<TAB>"
-"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-
-"}}}
-
-
-" => for ctags {{{
-""""""""""""""""""""""""""""""
-" tags-and-searchはtに統一
-" http://whileimautomaton.net/2008/08/vimworkshop3-kana-presentation
-
-" tを解除
-nnoremap t  <Nop>
-
-nnoremap tc  :!/opt/local/bin/ctags<space>-R<CR>
-
-"「飛ぶ」
-nnoremap tt  <C-]>
-nnoremap tT  g]
-"「進む」
-nnoremap tj  :<C-u>tag<CR>
-"「戻る」
-nnoremap tk  :<C-u>pop<CR>
-"履歴一覧
-" nnoremap tl  :<C-u>tags<CR>
-
-nnoremap tg  :tag<space>
-" タグが複数の時にリストを表示
-nnoremap ts  :tselect<Return>
-nnoremap tS  :tselect<space>/^
-
-" タグが複数の時にリストを表示
-nnoremap tn  :tnext<Return>
-nnoremap tp  :tprevious<Return>
-
-"nnoremap ,L  :tlast<Return>
-"nnoremap ,F  :tfirst<Return>
-"
-"set tags=./tags,tags
-
-" Tlist
-nnoremap tl  :TlistToggle<Return><C-w>=
-
-" Triniy
-" nnoremap tr  :TrinityToggleAll<Return><C-w>=
-"}}}
-
-
-" => JS section {{{
-""""""""""""""""""""""""""""""
-augroup javascript
-      autocmd FileType javascript
-	\ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
-augroup END
-"}}}
-
-
-" => Ruby section {{{
-""""""""""""""""""""""""""""""
-NeoBundle 'https://github.com/vim-ruby/vim-ruby.git'
-augroup ruby
-      autocmd FileType ruby
-        \   setlocal makeprg=ruby\ -cdw\ %
-        \|  setlocal errorformat=%f:%l:%m
-        \|  setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
-augroup END
-"}}}
-
-
-" => Python section {{{
-""""""""""""""""""""""""""""""
-augroup python
-      autocmd FileType python
-        \  setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
-augroup END
-"}}}
-
-
-" => Ruby section {{{
-""""""""""""""""""""""""""""""
-augroup markdown
-      autocmd FileType markdown
-        \ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
-augroup END
-"}}}
-
-
-" => neosnippet.vim {{{
-""""""""""""""""""""""""""""""
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-" }}}
 
 
 "vimfiler {{{
