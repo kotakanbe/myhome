@@ -227,16 +227,22 @@ vnoremap /g y:Unite grep::-iHRn:<C-R>=escape(@", '\\.*$^[]')<CR><CR>
 
 " programing
 
+
 "NeoBundle 'https://github.com/vim-scripts/taglist.vim.git'
 NeoBundle 'https://github.com/houtsnip/vim-emacscommandline.git'
 NeoBundle 'https://github.com/thinca/vim-ft-svn_diff.git'
 "NeoBundle 'https://github.com/vim-scripts/DirDiff.vim.git'
 NeoBundle 'https://github.com/AndrewRadev/splitjoin.vim.git'
-NeoBundle "tpope/vim-surround"
 "nmap ss :SplitjoinSplit<cr>
 "nmap sj :SplitjoinJoin<cr>
-"
+NeoBundle "tpope/vim-surround"
+NeoBundle 'https://github.com/Raimondi/delimitMate.git'
 NeoBundle 'https://github.com/thinca/vim-quickrun.git'
+" }}}
+
+" Git
+NeoBundle 'https://github.com/airblade/vim-gitgutter.git'
+" }}}
 
 " => for refactoring {{{
 """"""""""""""""""""""""""""""
@@ -410,12 +416,20 @@ augroup python
 augroup END
 "}}}
 
-" => Ruby section {{{
+" => Markdown section {{{
 """"""""""""""""""""""""""""""
+NeoBundle 'suan/vim-instant-markdown'
 augroup markdown
       autocmd FileType markdown
         \ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
 augroup END
+
+"Markdown Preview Plus {{{
+"  map <leader>md :MkdChrome<cr>
+"  command! MkdChrome call MkdChrome()
+"  function! MkdChrome()
+"      call system('chromium-browser ' . expand('%'))
+"  endfunction
 "}}}
 
 "NeoBundle 'https://github.com/mhinz/vim-signify.git'
@@ -521,13 +535,6 @@ endfunction
 "}}}
 
 
-"Markdown Preview Plus {{{
-map <leader>md :MkdChrome<cr>
-command! MkdChrome call MkdChrome()
-function! MkdChrome()
-    call system('chromium-browser ' . expand('%'))
-endfunction
-"}}}
 
 NeoBundleCheck
 

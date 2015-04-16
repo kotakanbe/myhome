@@ -158,11 +158,8 @@ alias -g G='| grep'
 alias -g W='| wc'
 alias -g S='| sed'
 alias -g A='| awk'
-alias -g P='| peco'
+#alias -g P='| peco'
 alias -g N='| growlnotify -s -t "command" -m "finished."'
-
-# for http-proxy alias -g P=' --http-proxy=http://10.42.5.10:8000'
-
 
 # http://qiita.com/uchiko/items/f6b1528d7362c9310da0
 function peco-select-history() {
@@ -260,3 +257,36 @@ export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
 
 alias tmux='tmux -2'
+
+# docker
+function docker-images-id() {
+  docker images | tail -n +2 | peco | awk -F" " '{print $3}'
+}
+
+function docker-ps-names() {
+  docker ps | tail -n +2 | peco | awk -F" " '{print $1}'
+}
+
+function docker-ps-a-names() {
+  docker ps -a | tail -n +2 | peco | awk -F" " '{print $1}'
+}
+
+function docker-notag() {
+  docker images | grep '<none>' | awk '{print$3}'
+}
+
+alias dps='docker ps'
+
+#alias drun='docker run -d $(docker-images-id)'
+alias drun='docker run -i -t -d $(docker-images-id) /bin/bash'
+
+alias dstop='docker stop $(docker-ps-names)'
+alias dstart='docker start $(docker-ps-a-names)'
+alias drm='docker rm $(docker-ps-a-names)'
+alias drmall='docker rm $(docker ps -a -q)'
+alias drmi='docker rmi $(docker-images-id)'
+alias drminotag='docker rmi $(docker-notag)'
+
+alias dattach='docker attach $(docker-ps-names)'
+alias dexec='docker exec -it $(docker-ps-names) /bin/bash'
+
