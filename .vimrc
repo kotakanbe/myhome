@@ -142,12 +142,35 @@ endtry
 NeoBundle 'https://github.com/justinmk/vim-sneak.git'
 "nmap ; <Plug>SneakNext
 nmap - <Plug>SneakPrevious
+
+NeoBundle 'https://github.com/tmhedberg/matchit.git'
+" }}}
+
+" edit {{{
+NeoBundle 'https://github.com/ervandew/supertab.git'
 " }}}
 
 " filer {{{
 NeoBundle 'https://github.com/Shougo/vimfiler.vim.git'
 NeoBundle 'https://github.com/thinca/vim-qfreplace.git'
 NeoBundle 'https://github.com/kien/ctrlp.vim.git'
+
+NeoBundle 'scrooloose/nerdtree'
+let g:NERDTreeShowBookmarks=1		"起動時にBookmarkを表示
+nnoremap <silent> tr :NERDTree<CR>
+
+"vimfiler 
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_safe_mode_by_default = 0
+nnoremap <silent> <Leader>fe :<C-u>VimFilerBufferDir -quit<CR>
+nnoremap <silent> <Leader>fi :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+augroup vimrc
+  autocmd FileType vimfiler call s:vimfiler_my_settings()
+augroup END
+function! s:vimfiler_my_settings()
+  nmap <buffer> q <Plug>(vimfiler_exit)
+  nmap <buffer> Q <Plug>(vimfiler_hide)
+endfunction
 " }}}
 
 "  unite {{{
@@ -224,10 +247,8 @@ vnoremap /g y:Unite grep::-iHRn:<C-R>=escape(@", '\\.*$^[]')<CR><CR>
 
 " }}}
 
-
-" programing
-
-
+" programing {{{
+"
 "NeoBundle 'https://github.com/vim-scripts/taglist.vim.git'
 NeoBundle 'https://github.com/houtsnip/vim-emacscommandline.git'
 NeoBundle 'https://github.com/thinca/vim-ft-svn_diff.git'
@@ -240,7 +261,7 @@ NeoBundle 'https://github.com/Raimondi/delimitMate.git'
 NeoBundle 'https://github.com/thinca/vim-quickrun.git'
 " }}}
 
-" Git
+" Git {{{
 NeoBundle 'https://github.com/airblade/vim-gitgutter.git'
 " }}}
 
@@ -358,7 +379,7 @@ nnoremap <silent> <Leader>gd :GoDef<CR>
 NeoBundle 'https://github.com/derekwyatt/vim-scala.git'
 " }}}
 "
-" => neosnippet.vom {{{
+" => neosnippet.vim {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'https://github.com/Shougo/neosnippet.vim.git'
 NeoBundle 'https://github.com/Shougo/neosnippet-snippets.git'
@@ -388,6 +409,13 @@ endif
 
 "}}}
 
+" => HTML section {{{
+""""""""""""""""""""""""""""""
+augroup html
+      autocmd FileType html
+	\ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
+augroup END
+"}}}
 
 " => JS section {{{
 """"""""""""""""""""""""""""""
@@ -424,17 +452,23 @@ augroup markdown
         \ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
 augroup END
 
-"Markdown Preview Plus {{{
+"Markdown Preview Plus 
 "  map <leader>md :MkdChrome<cr>
 "  command! MkdChrome call MkdChrome()
 "  function! MkdChrome()
 "      call system('chromium-browser ' . expand('%'))
 "  endfunction
-"}}}
+" }}}
+
+" vimbed embeded vim in other programs{{{
+" used by https://github.com/ardagnir/athame
+NeoBundle 'ardagnir/vimbed'
+" }}}
 
 "NeoBundle 'https://github.com/mhinz/vim-signify.git'
 "NeoBundle 'https://github.com/jaxbot/selective-undo.vim.git'
 
+" color {{{
 set t_Co=256
 NeoBundle 'https://github.com/bling/vim-airline.git'
 let g:airline#extensions#tabline#enabled = 1
@@ -455,21 +489,13 @@ colorscheme molokai-dark
 "
 "NeoBundle 'https://github.com/morhetz/gruvbox.git'
 "colorscheme gruvbox
-
-NeoBundle 'https://github.com/tmhedberg/matchit.git'
-
-NeoBundle 'https://github.com/ervandew/supertab.git'
-
-NeoBundle 'scrooloose/nerdtree'
-let g:NERDTreeShowBookmarks=1		"起動時にBookmarkを表示
-nnoremap <silent> tr :NERDTree<CR>
-
+"
+" }}}
 
 "NeoBundle 'https://github.com/thinca/vim-qfreplace.git'
 
 " window
 "NeoBundle 'https://github.com/vim-scripts/ZoomWin.git'
-
 
 " => neocomplcache.vim {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -511,30 +537,6 @@ autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
 "}}}
-
-
-"vimfiler {{{
-"vimデフォルトのエクスプローラをvimfilerで置き換える
-let g:vimfiler_as_default_explorer = 1
-"セーフモードを無効にした状態で起動する
-let g:vimfiler_safe_mode_by_default = 0
-"現在開いているバッファのディレクトリを開く
-nnoremap <silent> <Leader>fe :<C-u>VimFilerBufferDir -quit<CR>
-"現在開いているバッファをIDE風に開く
-nnoremap <silent> <Leader>fi :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
- 
-"デフォルトのキーマッピングを変更
-augroup vimrc
-  autocmd FileType vimfiler call s:vimfiler_my_settings()
-augroup END
-function! s:vimfiler_my_settings()
-  nmap <buffer> q <Plug>(vimfiler_exit)
-  nmap <buffer> Q <Plug>(vimfiler_hide)
-endfunction
- 
-"}}}
-
-
 
 NeoBundleCheck
 

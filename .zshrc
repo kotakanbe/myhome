@@ -232,7 +232,9 @@ alias vg='vim-ag'
 # find | peco | vim
 function vim-find () {
   #vim $(find ~ -maxdepth 10 | peco --query "$LBUFFER")
-  vim $(find . | peco --query "$LBUFFER")
+  #vim $(find . | peco --query "$LBUFFER")
+  #vim $(find . | grep "$LBUFFER" | peco )
+  vim $(find . -name "*$@*" | peco )
 }
 alias vf='vim-find'
 
@@ -263,11 +265,11 @@ function docker-images-id() {
   docker images | tail -n +2 | peco | awk -F" " '{print $3}'
 }
 
-function docker-ps-names() {
+function docker-ps-name() {
   docker ps | tail -n +2 | peco | awk -F" " '{print $1}'
 }
 
-function docker-ps-a-names() {
+function docker-ps-a-name() {
   docker ps -a | tail -n +2 | peco | awk -F" " '{print $1}'
 }
 
@@ -279,14 +281,25 @@ alias dps='docker ps'
 
 #alias drun='docker run -d $(docker-images-id)'
 alias drun='docker run -i -t -d $(docker-images-id) /bin/bash'
+alias drunsshd='docker run -i -t -p 2222:22 -d $(docker-images-id) /usr/sbin/sshd -D'
 
-alias dstop='docker stop $(docker-ps-names)'
-alias dstart='docker start $(docker-ps-a-names)'
-alias drm='docker rm $(docker-ps-a-names)'
+alias dstop='docker stop $(docker-ps-name)'
+alias dstart='docker start $(docker-ps-a-name)'
+alias drm='docker rm $(docker-ps-a-name)'
 alias drmall='docker rm $(docker ps -a -q)'
 alias drmi='docker rmi $(docker-images-id)'
 alias drminotag='docker rmi $(docker-notag)'
 
-alias dattach='docker attach $(docker-ps-names)'
-alias dexec='docker exec -it $(docker-ps-names) /bin/bash'
+alias dattach='docker attach $(docker-ps-name)'
+alias dexec='docker exec -it $(docker-ps-name) /bin/bash'
 
+alias dinspect='docker inspect $(docker-ps-name)'
+alias dport='docker port $(docker-ps-name)'
+alias dlogs='docker logs -f $(docker-ps-name)'
+alias dtop='docker top $(docker-ps-name)'
+ #  alias dinspect='docker inspect $(docker-images-id)'
+
+
+# the fuck
+alias fuck='eval $(thefuck $(fc -ln -1))'
+alias FUCK='fuck'
