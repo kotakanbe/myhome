@@ -6,14 +6,31 @@
 "    call neobundle#rc(expand('~/.vim/bundle/'))
 "endif
 
-set nocompatible               " Be iMproved
+"set nocompatible               " Be iMproved
+"if has('vim_starting')
+"    set runtimepath+=~/.vim/bundle/neobundle.vim/
+"endif
+"
+"call neobundle#rc(expand('~/.vim/bundle/'))
+"
+" " Let NeoBundle manage NeoBundle
+"NeoBundleFetch 'Shougo/neobundle.vim'
+"NeoBundle 'https://github.com/Shougo/vimproc.vim.git'
+
+
+" Note: Skip initialization for vim-tiny or vim-small.
+if !1 | finish | endif
+
 if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
+
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
-call neobundle#rc(expand('~/.vim/bundle/'))
+call neobundle#begin(expand('~/.vim/bundle/'))
 
- " Let NeoBundle manage NeoBundle
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'https://github.com/Shougo/vimproc.vim.git'
 
@@ -538,10 +555,27 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
 "}}}
 
+" => outliner {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/lukaszkorecki/workflowish
+" zq で現在の要素にズーム
+" zp で親要素に移動
+" https://github.com/lukaszkorecki/workflowish
+NeoBundle 'https://github.com/lukaszkorecki/workflowish.git'
+"NeoBundle 'https://github.com/vimoutliner/vimoutliner.git'
+"}}}
+"
+
+
+
+call neobundle#end()
+
+filetype plugin indent on
+
 NeoBundleCheck
 
 " Enable filetype plugin
 filetype on
 filetype plugin on
-filetype plugin indent on
+"filetype plugin indent on
 filetype indent on

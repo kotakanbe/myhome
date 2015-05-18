@@ -303,3 +303,8 @@ alias dtop='docker top $(docker-ps-name)'
 # the fuck
 alias fuck='eval $(thefuck $(fc -ln -1))'
 alias FUCK='fuck'
+
+# nodebrew
+export PATH=$HOME/.nodebrew/current/bin:$PATH
+
+
