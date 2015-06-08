@@ -370,10 +370,10 @@ NeoBundle 'google/vim-codefmtlib'
 NeoBundle 'google/vim-codefmt'
 " Also add Glaive, which is used to configure codefmt's maktaba flags. See
 " `:help :Glaive` for usage.
-NeoBundle 'google/vim-glaive'
-call glaive#Install()
+"  NeoBundle 'google/vim-glaive'
+"  call glaive#Install()
 " Optional: Enable codefmt's default mappings on the <Leader>= prefix.
-Glaive codefmt plugin[mappings]
+"  Glaive codefmt plugin[mappings]
 " }}}
 "
 " for golang {{{
@@ -497,9 +497,13 @@ let g:airline#extensions#tabline#enabled = 1
 
 
 NeoBundle 'https://github.com/zeekay/vice-colorful.git'
-colorscheme molokai-dark
 
-"NeoBundle 'https://github.com/tomasr/molokai.git'
+NeoBundle 'https://github.com/tomasr/molokai.git'
+let g:molokai_original = 1
+let g:rehash256 = 1
+
+"  colorscheme molokai-dark
+
 "colorscheme molokai
 "let g:rehash256 = 1
 "let g:molokai_original = 1
