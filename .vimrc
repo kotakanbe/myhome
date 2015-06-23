@@ -54,19 +54,37 @@ set foldmethod=marker
 " Show folding level.
 "set foldcolumn=3
 
-let mapleader = ","
-let g:mapleader = ","
+
+" http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
+let mapleader = "\<Space>"
+let g:mapleader = "\<Space>"
 
 " Fast saving
 nmap <leader>w :w!<cr>
 
 nmap <leader>, :redraw!<cr>
 
+nmap <leader>o :CtrlP<cr>
+
+nmap <Leader><Leader> V
+
+vmap <Leader>y "+y
+vmap <Leader>d "+d
+nmap <Leader>p "+p
+nmap <Leader>P "+P
+vmap <Leader>p "+p
+vmap <Leader>P "+P
+
+map <leader>e :Errors<cr>
+map <leader>q :q<cr>
+
 " Fast editing of the .vimrc
-map <leader>ee :e! ~/.vimrc<cr>
-map <leader>ev :e! ~/.vimperatorrc<cr>
-map <leader>ez :e! ~/.zshrc<cr>
-map <leader>et :e! ~/.tmux.conf<cr>
+map <leader>Ee :e! ~/.vimrc<cr>
+map <leader>Ev :e! ~/.vimperatorrc<cr>
+map <leader>Ez :e! ~/.zshrc<cr>
+map <leader>Et :e! ~/.tmux.conf<cr>
+
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vimrc
@@ -407,9 +425,9 @@ let g:neosnippet#snippets_directory = [
       \]
 
 " Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+ imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+ smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+ xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
 "imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
@@ -570,6 +588,21 @@ NeoBundle 'https://github.com/lukaszkorecki/workflowish.git'
 "}}}
 "
 
+" => terryma/vim-expand-region {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
+NeoBundle 'https://github.com/terryma/vim-expand-region'
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
+"}}}
+
+" => search and replace {{{
+" TODO not working
+" http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
+"  vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
+"      \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
+"  omap s :normal vs<CR>
+"}}}
 
 
 call neobundle#end()
