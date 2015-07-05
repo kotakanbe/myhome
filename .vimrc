@@ -1,23 +1,4 @@
 
-"filetype off
-"filetype plugin indent off     " required!
-"if has('vim_starting')
-"    set runtimepath+=~/.vim/bundle/neobundle.vim/
-"    call neobundle#rc(expand('~/.vim/bundle/'))
-"endif
-
-"set nocompatible               " Be iMproved
-"if has('vim_starting')
-"    set runtimepath+=~/.vim/bundle/neobundle.vim/
-"endif
-"
-"call neobundle#rc(expand('~/.vim/bundle/'))
-"
-" " Let NeoBundle manage NeoBundle
-"NeoBundleFetch 'Shougo/neobundle.vim'
-"NeoBundle 'https://github.com/Shougo/vimproc.vim.git'
-
-
 " Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
 
@@ -39,6 +20,9 @@ NeoBundle 'https://github.com/Shougo/vimproc.vim.git'
 " Sets how many lines of history VIM has to remember
 set history=300
 
+" Enable syntax highlighting
+syntax enable 
+
 set list		" 不可視文字表示
 set listchars=tab:>\ \,trail:_,extends:>,precedes:<
 
@@ -54,13 +38,18 @@ set foldmethod=marker
 " Show folding level.
 "set foldcolumn=3
 
+" Files, backups and undo
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
 
 " http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
 let mapleader = "\<Space>"
 let g:mapleader = "\<Space>"
 
 " Fast saving
-nmap <leader>w :w!<cr>
+nmap <leader>w :w!<cr> :redraw!<cr>
 
 nmap <leader>, :redraw!<cr>
 
@@ -173,7 +162,11 @@ endtry
 "}}}
 
 " motion {{{
-"NeoBundle 'https://github.com/Lokaltog/vim-easymotion.git'
+"
+" <leader><leader>j or k
+NeoBundle 'https://github.com/Lokaltog/vim-easymotion.git'
+
+" s**
 NeoBundle 'https://github.com/justinmk/vim-sneak.git'
 "nmap ; <Plug>SneakNext
 nmap - <Plug>SneakPrevious
@@ -503,32 +496,28 @@ NeoBundle 'ardagnir/vimbed'
 "NeoBundle 'https://github.com/mhinz/vim-signify.git'
 "NeoBundle 'https://github.com/jaxbot/selective-undo.vim.git'
 
-" color {{{
-set t_Co=256
+" color and Fonts {{{
+
+try
+    colorscheme desert
+catch
+endtry
+ 
+set background=dark
+
+if has("gui_running")
+    set guioptions-=T
+    set guioptions-=e
+    set t_Co=256
+    set guitablabel=%M\ %t
+endif
+
 NeoBundle 'https://github.com/bling/vim-airline.git'
 let g:airline#extensions#tabline#enabled = 1
 
-"NeoBundle 'https://github.com/altercation/vim-colors-solarized.git'
-"set background=dark
-"set background=light
-"colorscheme solarized
-
-
 NeoBundle 'https://github.com/zeekay/vice-colorful.git'
+NeoBundle 'https://github.com/zeekay/vim-color-switch.git'
 
-NeoBundle 'https://github.com/tomasr/molokai.git'
-let g:molokai_original = 1
-let g:rehash256 = 1
-
-"  colorscheme molokai-dark
-
-"colorscheme molokai
-"let g:rehash256 = 1
-"let g:molokai_original = 1
-"
-"NeoBundle 'https://github.com/morhetz/gruvbox.git'
-"colorscheme gruvbox
-"
 " }}}
 
 "NeoBundle 'https://github.com/thinca/vim-qfreplace.git'

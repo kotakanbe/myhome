@@ -252,10 +252,8 @@ function vim-find-recent-modified() {
 export PATH=$HOME/bin:$PATH
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
-#export GOROOT=/usr/local/opt/go/libexec
-#export GOPATH=/usr/local/go
-#export PATH=$PATH:$GOPATH/bin
-export GOROOT=/usr/local/go
+#export GOROOT=/usr/local/go
+export GOROOT=/usr/local/opt/go/libexec
 export PATH=$PATH:$GOROOT/bin
 
 alias tmux='tmux -2'
@@ -299,6 +297,8 @@ alias dlogs='docker logs -f $(docker-ps-name)'
 alias dtop='docker top $(docker-ps-name)'
  #  alias dinspect='docker inspect $(docker-images-id)'
 
+ alias g='cd $(ghq list -p | peco)'
+ alias gh='gh-open $(ghq list -p | peco)'
 
 # the fuck
 alias fuck='eval $(thefuck $(fc -ln -1))'
@@ -307,4 +307,7 @@ alias FUCK='fuck'
 # nodebrew
 export PATH=$HOME/.nodebrew/current/bin:$PATH
 
-
+# boot2docker
+export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/kotakanbe/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
