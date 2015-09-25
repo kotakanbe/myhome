@@ -68,7 +68,7 @@ abbreviate zabbix https://nasa.future.co.jp/zabbix/
 "autocmd LocationChange owa\\.future\\.co\\.jp js modes.passAllKeys = true
 
 " set editor="gvim -f"
-set editor="macvim -f"
+set editor="/usr/local/opt/macvim/bin/mvim -f"
 ""set editor="gnome-terminal --disable-factoy -x vim "
 
 " copy.js の設定

@@ -1,5 +1,13 @@
+" cursor moveing memo http://qiita.com/takeharu/items/9d1c3577f8868f7b07b5
+" g;  back to edit history
+" g,  forward to edit history
+" c-o  back to previous junmped
+" c-i  forward to next jumped
+" {  back to previous paragraph
+" }  forward to next paragraph
+"
 
-" Note: Skip initialization for vim-tiny or vim-small.
+"Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
 
 if has('vim_starting')
@@ -23,8 +31,8 @@ set history=300
 " Enable syntax highlighting
 syntax enable 
 
-set list		" 不可視文字表示
-set listchars=tab:>\ \,trail:_,extends:>,precedes:<
+"  set list		" 不可視文字表示
+"  set listchars=tab:>\ \,trail:_,extends:>,precedes:<
 
 
 " Set to auto read when a file is changed from the outside
@@ -49,7 +57,7 @@ let mapleader = "\<Space>"
 let g:mapleader = "\<Space>"
 
 " Fast saving
-nmap <leader>w :w!<cr> :redraw!<cr>
+nmap <leader>w :w!<cr>:redraw!<cr>
 
 nmap <leader>, :redraw!<cr>
 
@@ -59,12 +67,13 @@ nmap <Leader><Leader> V
 
 vmap <Leader>y "+y
 vmap <Leader>d "+d
-nmap <Leader>p "+p
-nmap <Leader>P "+P
-vmap <Leader>p "+p
-vmap <Leader>P "+P
+"  nmap <Leader>p "+p
+"  nmap <Leader>P "+P
+"  vmap <Leader>p "+p
+"  vmap <Leader>P "+P
 
-map <leader>e :Errors<cr>
+"  map <leader>e :Errors<cr>
+map <leader>ee :lclose<cr>:Errors<cr>
 map <leader>q :q<cr>
 
 " Fast editing of the .vimrc
@@ -79,6 +88,11 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 autocmd! bufwritepost vimrc source ~/.vimrc
 
 " Search
+NeoBundle 'haya14busa/incsearch.vim'
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
 set hlsearch
 set wrapscan        " 最後まで検索したら先頭へ戻る
 set ignorecase      " 大文字小文字無視
@@ -87,6 +101,12 @@ set incsearch
 
 " Escの2回押しでハイライト消去
 nnoremap <ESC><ESC> :nohlsearch<CR><ESC>
+
+" Enhanced multi-file search for Vim
+NeoBundle 'wincent/ferret'
+map <Leader>n :cn<cr>
+map <Leader>p :cp<cr>
+
 
 set autoindent          " 自動でインデント
 set smartindent         " 新しい行のインデントを現在行と同じ量にする
@@ -163,7 +183,7 @@ endtry
 
 " motion {{{
 "
-" <leader><leader>j or k
+" <leader><leader>j or k or f or w
 NeoBundle 'https://github.com/Lokaltog/vim-easymotion.git'
 
 " s**
@@ -172,6 +192,10 @@ NeoBundle 'https://github.com/justinmk/vim-sneak.git'
 nmap - <Plug>SneakPrevious
 
 NeoBundle 'https://github.com/tmhedberg/matchit.git'
+
+
+NeoBundle 'unblevable/quick-scope'
+
 " }}}
 
 " edit {{{
@@ -263,7 +287,8 @@ let g:unite_source_file_mru_limit = 200
 
 " unite-grep
 let g:unite_source_grep_default_opts = '-iRHn'
-let g:unite_source_grep_command = 'ack-grep'
+"  let g:unite_source_grep_command = 'ack-grep'
+let g:unite_source_grep_command = 'ack'
 let g:unite_source_grep_default_opts = '--nocolor --nogroup'
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 200
@@ -306,8 +331,9 @@ NeoBundle 'https://github.com/terryma/vim-multiple-cursors.git'
 
 " => for ctags {{{
 """"""""""""""""""""""""""""""
-NeoBundle 'https://github.com/xolox/vim-misc.git'
-"NeoBundle 'https://github.com/xolox/vim-easytags.git'
+
+"  NeoBundle 'https://github.com/xolox/vim-misc.git'
+"  NeoBundle 'https://github.com/xolox/vim-easytags.git'
 
 "let g:easytags_file='~/.vim/tags'
 set tags=tags;/
@@ -341,7 +367,8 @@ nnoremap tn  :tnext<Return>
 nnoremap tp  :tprevious<Return>
 
 NeoBundle 'majutsushi/tagbar'
-nnoremap tb  :TagbarToggle<Return>
+"  nnoremap tb  :TagbarToggle<Return>
+nnoremap <leader>tb :TagbarToggle<CR>
 
 "nnoremap ,L  :tlast<Return>
 "nnoremap ,F  :tfirst<Return>
@@ -396,11 +423,44 @@ NeoBundle 'Blackrush/vim-gocode'
 set path+=$GOPATH/src/**
 let g:gofmt_command = 'goimports'
 au BufWritePre *.go Fmt
+"  au BufWritePost *.go !gotags . -R > tags
+au BufWritePost *.go silent! !gotags -R -sort -silent . > tags &
+au BufReadPost *.go silent! !gotags -R -sort -silent . > tags &
+
 au BufNewFile,BufRead *.go set sw=4 noexpandtab ts=4 completeopt=menu,preview
 au FileType go compiler go
 
 let g:godef_split=1
 nnoremap <silent> <Leader>gd :GoDef<CR>
+
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+    \ }
+
 " }}}
 
 " Scala {{{
@@ -475,10 +535,14 @@ augroup END
 " => Markdown section {{{
 """"""""""""""""""""""""""""""
 NeoBundle 'suan/vim-instant-markdown'
+
 augroup markdown
       autocmd FileType markdown
         \ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
 augroup END
+
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'plasticboy/vim-markdown'
 
 "Markdown Preview Plus 
 "  map <leader>md :MkdChrome<cr>
@@ -486,6 +550,12 @@ augroup END
 "  function! MkdChrome()
 "      call system('chromium-browser ' . expand('%'))
 "  endfunction
+" }}}
+
+" => open-browser.vim {{{
+"  NeoBundle 'tyru/open-browser.vim.git'
+"  let g:netrw_nogx = 1 " disable netrw's gx mapping.
+"  vnoremap <leader>b <Plug>(openbrowser-smart-search)
 " }}}
 
 " vimbed embeded vim in other programs{{{
@@ -498,12 +568,16 @@ NeoBundle 'ardagnir/vimbed'
 
 " color and Fonts {{{
 
+"  NeoBundle 'altercation/vim-colors-solarized'
+"  set background=dark
+
 try
-    colorscheme desert
+	 colorscheme desert
+	"  colorscheme solarized
 catch
 endtry
  
-set background=dark
+ set background=dark
 
 if has("gui_running")
     set guioptions-=T
@@ -575,7 +649,7 @@ autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
 NeoBundle 'https://github.com/lukaszkorecki/workflowish.git'
 "NeoBundle 'https://github.com/vimoutliner/vimoutliner.git'
 "}}}
-"
+
 
 " => terryma/vim-expand-region {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -584,6 +658,17 @@ NeoBundle 'https://github.com/terryma/vim-expand-region'
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
 "}}}
+
+" => evervim {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'https://github.com/kakkyz81/evervim.git'
+let g:evervim_devtoken='S=s7:U=c4685:E=157262c3854:C=14fce7b0970:P=1cd:A=en-devtoken:V=2:H=2d9363484cb3304dc92e29293a0dc6f9'
+nnoremap <Leader>el :EvervimNotebookList<CR>
+nnoremap <Leader>es :EvervimSearchByQuery<Space>
+nnoremap <Leader>ec :EvervimCreateNote<CR>
+nnoremap <Leader>et :EvervimListTags<CR>
+"}}}
+"
 
 " => search and replace {{{
 " TODO not working
