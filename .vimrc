@@ -1,10 +1,32 @@
-" cursor moveing memo http://qiita.com/takeharu/items/9d1c3577f8868f7b07b5
+" Setup
+" 1. install neobundle https://github.com/Shougo/neobundle.vim
+" 2. ghq get https://github.com/kotakanbe/myhome.git
+" 3. cd $HOME/.vim
+" 4. ln -s /path/to/myhome/dict 
+"
+" Tips
+" # cursor moveing memo http://qiita.com/takeharu/items/9d1c3577f8868f7b07b5
 " g;  back to edit history
 " g,  forward to edit history
 " c-o  back to previous junmped
 " c-i  forward to next jumped
 " {  back to previous paragraph
 " }  forward to next paragraph
+"
+" 
+" # vim-easymotion
+" <space><space>w forward to word
+" <space><space>b back to word
+"
+"
+" # vim-surround
+" - surround in Visual mode 
+" curwor on hello , press vvS"
+" "hello"
+"
+" - delete
+" curwor on "hello" , press ds"
+" hello
 "
 
 "Note: Skip initialization for vim-tiny or vim-small.
@@ -183,13 +205,13 @@ endtry
 
 " motion {{{
 "
-" <leader><leader>j or k or f or w
+" <leader><leader>j or k or f or w or b
 NeoBundle 'https://github.com/Lokaltog/vim-easymotion.git'
 
 " s**
-NeoBundle 'https://github.com/justinmk/vim-sneak.git'
+"NeoBundle 'https://github.com/justinmk/vim-sneak.git'
 "nmap ; <Plug>SneakNext
-nmap - <Plug>SneakPrevious
+"nmap - <Plug>SneakPrevious
 
 NeoBundle 'https://github.com/tmhedberg/matchit.git'
 
@@ -465,8 +487,89 @@ let g:tagbar_type_go = {
 
 " Scala {{{
 NeoBundle 'https://github.com/derekwyatt/vim-scala.git'
+au BufNewFile,BufRead *.scala setf scala
 " }}}
-"
+
+"" => neocomplete.vim {{{
+NeoBundle 'https://github.com/Shougo/neocomplete.vim.git'
+
+"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" TODO Define dictionary.
+" scala.dict    https://github.com/yuroyoro/vim-scala/blob/master/dict/scala.dict
+" ruby.dict 	https://github.com/pocke/dicts
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'scala' : $HOME . '/.vim/dict/scala.dict',
+    \ 'ruby' : $HOME . '/.vim/dict/ruby.dict',
+    \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return "\<C-y>\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+" }}}
+
+
 " => neosnippet.vim {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'https://github.com/Shougo/neosnippet.vim.git'
@@ -478,21 +581,21 @@ let g:neosnippet#snippets_directory = [
       \]
 
 " Plugin key-mappings.
- imap <C-k>     <Plug>(neosnippet_expand_or_jump)
- smap <C-k>     <Plug>(neosnippet_expand_or_jump)
- xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
-"imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: pumvisible() ? "\<C-n>" : "\<TAB>"
-"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: "\<TAB>"
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump)"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " For snippet_complete marker.
 if has('conceal')
-  set conceallevel=2 concealcursor=i
+  set conceallevel=2 concealcursor=niv
 endif
 
 "}}}
@@ -599,46 +702,47 @@ NeoBundle 'https://github.com/zeekay/vim-color-switch.git'
 " window
 "NeoBundle 'https://github.com/vim-scripts/ZoomWin.git'
 
-" => neocomplcache.vim {{{
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" https://github.com/Shougo/neocomplcache.vim
-NeoBundle 'https://github.com/Shougo/neocomplcache.vim.git'
 
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplcache#smart_close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
-"}}}
+"" => neocomplcache.vim {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" https://github.com/Shougo/neocomplcache.vim
+"NeoBundle 'https://github.com/Shougo/neocomplcache.vim.git'
+"
+"" Disable AutoComplPop.
+"let g:acp_enableAtStartup = 0
+"" Use neocomplcache.
+"let g:neocomplcache_enable_at_startup = 1
+"" Use smartcase.
+"let g:neocomplcache_enable_smart_case = 1
+"" Set minimum syntax keyword length.
+"let g:neocomplcache_min_syntax_length = 3
+"let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+"" Recommended key-mappings.
+"" <CR>: close popup and save indent.
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+"  return neocomplcache#smart_close_popup() . "\<CR>"
+"  " For no inserting <CR> key.
+"  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+"endfunction
+"" <TAB>: completion.
+""inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"" <C-h>, <BS>: close popup and delete backword char.
+"inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+"inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+"inoremap <expr><C-y>  neocomplcache#close_popup()
+"inoremap <expr><C-e>  neocomplcache#cancel_popup()
+"" Close popup by <Space>.
+""inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+"
+"" Enable omni completion.
+"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
+""}}}
 
 " => outliner {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -679,6 +783,12 @@ nnoremap <Leader>et :EvervimListTags<CR>
 "}}}
 
 
+" => t9md/vim-choosewin {{{
+NeoBundle 'https://github.com/t9md/vim-choosewin.git'
+nmap  -  <Plug>(choosewin)
+let g:choosewin_overlay_enable = 1
+"}}}
+
 call neobundle#end()
 
 filetype plugin indent on
@@ -690,3 +800,4 @@ filetype on
 filetype plugin on
 "filetype plugin indent on
 filetype indent on
+
