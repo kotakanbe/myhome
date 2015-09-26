@@ -1,33 +1,37 @@
-" Setup
-" 1. install neobundle https://github.com/Shougo/neobundle.vim
-" 2. ghq get https://github.com/kotakanbe/myhome.git
-" 3. cd $HOME/.vim
-" 4. ln -s /path/to/myhome/dict 
+" # Setup
+"   1. install neobundle https://github.com/Shougo/neobundle.vim
+"   2. ghq get https://github.com/kotakanbe/myhome.git
+"   3. cd $HOME/.vim
+"   4. ln -s /path/to/myhome/dict 
 "
-" Tips
-" # cursor moveing memo http://qiita.com/takeharu/items/9d1c3577f8868f7b07b5
-" g;  back to edit history
-" g,  forward to edit history
-" c-o  back to previous junmped
-" c-i  forward to next jumped
-" {  back to previous paragraph
-" }  forward to next paragraph
-"
+" # Tips
+" - cursor moveing memo http://qiita.com/takeharu/items/9d1c3577f8868f7b07b5
+"   g;  back to edit history
+"   g,  forward to edit history
+"   c-o  back to previous junmped
+"   c-i  forward to next jumped
+"   {  back to previous paragraph
+"   }  forward to next paragraph
 " 
-" # vim-easymotion
-" <space><space>w forward to word
-" <space><space>b back to word
+" - vim-easymotion
+"   <space><space>w forward to word
+"   <space><space>b back to word
 "
+" - vim-surround
+"   surround in Visual mode 
+"     curwor on hello , press vvS"
+"     "hello"
 "
-" # vim-surround
-" - surround in Visual mode 
-" curwor on hello , press vvS"
-" "hello"
+"   delete
+"     curwor on "hello" , press ds"
+"     hello
 "
-" - delete
-" curwor on "hello" , press ds"
-" hello
+"   check keymapping
+"     :imap
+"     :nmap
 "
+" - vim-expand-region (tmux like window choise)
+"   - (normal mode)
 
 "Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
@@ -200,6 +204,9 @@ try
   set stal=2
 catch
 endtry
+
+
+nnoremap <CR> :w!<cr>:redraw!<cr>
 
 "}}}
 
@@ -701,48 +708,6 @@ NeoBundle 'https://github.com/zeekay/vim-color-switch.git'
 
 " window
 "NeoBundle 'https://github.com/vim-scripts/ZoomWin.git'
-
-
-"" => neocomplcache.vim {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" https://github.com/Shougo/neocomplcache.vim
-"NeoBundle 'https://github.com/Shougo/neocomplcache.vim.git'
-"
-"" Disable AutoComplPop.
-"let g:acp_enableAtStartup = 0
-"" Use neocomplcache.
-"let g:neocomplcache_enable_at_startup = 1
-"" Use smartcase.
-"let g:neocomplcache_enable_smart_case = 1
-"" Set minimum syntax keyword length.
-"let g:neocomplcache_min_syntax_length = 3
-"let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-"" Recommended key-mappings.
-"" <CR>: close popup and save indent.
-"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-"function! s:my_cr_function()
-"  return neocomplcache#smart_close_popup() . "\<CR>"
-"  " For no inserting <CR> key.
-"  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-"endfunction
-"" <TAB>: completion.
-""inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-"" <C-h>, <BS>: close popup and delete backword char.
-"inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-"inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-"inoremap <expr><C-y>  neocomplcache#close_popup()
-"inoremap <expr><C-e>  neocomplcache#cancel_popup()
-"" Close popup by <Space>.
-""inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
-"
-"" Enable omni completion.
-"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
-""}}}
 
 " => outliner {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
