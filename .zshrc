@@ -262,10 +262,11 @@ alias dinspect='docker inspect $(docker-ps-name)'
 alias dport='docker port $(docker-ps-name)'
 alias dlogs='docker logs -f $(docker-ps-name)'
 alias dtop='docker top $(docker-ps-name)'
+
  #  alias dinspect='docker inspect $(docker-images-id)'
 
- alias g='cd $(ghq list -p | peco)'
- alias gh='gh-open $(ghq list -p | peco)'
+alias g='cd $(ghq list -p | peco)'
+alias gh='gh-open $(ghq list -p | peco)'
 
 # the fuck
 alias fuck='eval $(thefuck $(fc -ln -1))'
@@ -295,3 +296,25 @@ alias tmax='osascript ~/.termtile/maximize.scpt '
 alias tsn='osascript ~/.termtile/changeScreen.scpt next'
 alias tfs='osascript ~/.termtile/fullscreen.scpt '
 
+# cdr http://wada811.blogspot.com/2014/09/zsh-cdr.html
+# cdr, add-zsh-hook を有効にする
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+
+# cdr の設定
+zstyle ':completion:*' recent-dirs-insert both
+zstyle ':chpwd:*' recent-dirs-max 500
+zstyle ':chpwd:*' recent-dirs-default true
+zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/shell/chpwd-recent-dirs"
+zstyle ':chpwd:*' recent-dirs-pushd true
+
+function peco-cdr () {
+	local selected_dir=$(cdr -l | awk '{ print $2 }' | peco)
+	if [ -n "$selected_dir" ]; then
+		BUFFER="cd ${selected_dir}"
+		zle accept-linel
+	fi
+	zle clear-screen
+} 
+zle -N peco-cdr
+bindkey '^e' peco-cdr
