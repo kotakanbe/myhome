@@ -15,7 +15,6 @@ for config_file ($HOME/.yadr/zsh/*.zsh) source $config_file
 # Customize to your needs...
 # User configuration
 
-export PATH="/home/kanbe/.rvm/gems/ruby-2.1.3/bin:/home/kanbe/.rvm/gems/ruby-2.1.3@global/bin:/home/kanbe/.rvm/rubies/ruby-2.1.3/bin:/home/kanbe/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/kanbe/.rvm/bin:/home/kanbe/.rvm/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -215,7 +214,10 @@ function vim-find-recent-modified() {
 
 # export
 export PATH=$HOME/bin:$PATH
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+#export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+# RVM
+source /Users/kotakanbe/.rvm/scripts/rvm
 
 #export GOROOT=/usr/local/go
 export GOROOT=/usr/local/opt/go/libexec

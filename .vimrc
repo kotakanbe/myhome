@@ -101,6 +101,8 @@ vmap <Leader>d "+d
 "  map <leader>e :Errors<cr>
 map <leader>ee :lclose<cr>:Errors<cr>
 map <leader>q :q<cr>
+map <leader>en :cn<cr>
+map <leader>ep :cp<cr>
 
 " Fast editing of the .vimrc
 map <leader>Ee :e! ~/.vimrc<cr>
@@ -205,8 +207,35 @@ try
 catch
 endtry
 
+"TODO set paste
+":cn, :cp goto next error
+nnoremap <leader>sp :set paste<cr>
+nnoremap <leader>sn :set nopaste<cr>
 
-nnoremap <CR> :w!<cr>:redraw!<cr>
+inoremap <C-k> <Esc>dd<Up><Insert>
+
+
+function! WrapForTmux(s)
+  if !exists('$TMUX')
+    return a:s
+  endif
+
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
+
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+
+let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 "}}}
 
@@ -576,7 +605,6 @@ endif
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 " }}}
 
-
 " => neosnippet.vim {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'https://github.com/Shougo/neosnippet.vim.git'
@@ -588,9 +616,9 @@ let g:neosnippet#snippets_directory = [
       \]
 
 " Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-s>     <Plug>(neosnippet_expand_or_jump)
+smap <C-s>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-s>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
 "imap <expr><TAB>
@@ -719,7 +747,6 @@ NeoBundle 'https://github.com/lukaszkorecki/workflowish.git'
 "NeoBundle 'https://github.com/vimoutliner/vimoutliner.git'
 "}}}
 
-
 " => terryma/vim-expand-region {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
@@ -737,7 +764,6 @@ nnoremap <Leader>es :EvervimSearchByQuery<Space>
 nnoremap <Leader>ec :EvervimCreateNote<CR>
 nnoremap <Leader>et :EvervimListTags<CR>
 "}}}
-"
 
 " => search and replace {{{
 " TODO not working
@@ -746,7 +772,6 @@ nnoremap <Leader>et :EvervimListTags<CR>
 "      \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
 "  omap s :normal vs<CR>
 "}}}
-
 
 " => t9md/vim-choosewin {{{
 NeoBundle 'https://github.com/t9md/vim-choosewin.git'
