@@ -257,7 +257,7 @@ NeoBundle 'unblevable/quick-scope'
 " }}}
 
 " edit {{{
-NeoBundle 'https://github.com/ervandew/supertab.git'
+"NeoBundle 'https://github.com/ervandew/supertab.git'
 " }}}
 
 " filer {{{
@@ -616,22 +616,39 @@ let g:neosnippet#snippets_directory = [
       \]
 
 " Plugin key-mappings.
-imap <C-s>     <Plug>(neosnippet_expand_or_jump)
-smap <C-s>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-s>     <Plug>(neosnippet_expand_target)
-
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+ 
 " SuperTab like snippets behavior.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump)"
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+ 
 " For snippet_complete marker.
 if has('conceal')
-  set conceallevel=2 concealcursor=niv
+  set conceallevel=2 concealcursor=i
 endif
+
+"  " Plugin key-mappings.
+"  imap <C-s>     <Plug>(neosnippet_expand_or_jump)
+"  smap <C-s>     <Plug>(neosnippet_expand_or_jump)
+"  xmap <C-s>     <Plug>(neosnippet_expand_target)
+
+"  " SuperTab like snippets behavior.
+"  "imap <expr><TAB>
+"  " \ pumvisible() ? "\<C-n>" :
+"  " \ neosnippet#expandable_or_jumpable() ?
+"  " \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump)"
+"  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"              \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+"  " For snippet_complete marker.
+"  if has('conceal')
+"      set conceallevel=2 concealcursor=niv
+"  endif
 
 "}}}
 
