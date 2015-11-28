@@ -104,7 +104,7 @@ map <leader>q :q<cr>
 map <leader>en :cn<cr>
 map <leader>ep :cp<cr>
 
-map <leader>er :<c-u>edit<cr>
+map <leader>er :edit<cr>
 
 " Fast editing of the .vimrc
 map <leader>Ee :e! ~/.vimrc<cr>
@@ -490,19 +490,28 @@ au BufReadPost *.go silent! !gotags -R -sort -silent . > tags &
 au BufNewFile,BufRead *.go set sw=4 noexpandtab ts=4 completeopt=menu,preview
 au FileType go compiler go
 
-
+"  https://github.com/fatih/vim-go#mappings
+"  nnoremap gt  :<C-u>GoDef<CR>
 let g:godef_split=1
-"nnoremap <silent> <Leader>gd :GoDef<CR>
-nnoremap gt  :<C-u>GoDef<CR>
+au FileType go nmap <leader>gr <Plug>(go-run)
+au FileType go nmap <leader>gb <Plug>(go-build)
+au FileType go nmap <leader>gt <Plug>(go-test)
+au FileType go nmap <leader>gC <Plug>(go-coverage)
 
-au FileType go nmap <Leader>gv <Plug>(go-vet)
-au BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
-au BufWritePost,FileWritePost *.go execute 'GoVet' | cwindow
+au FileType go nmap <Leader>gg <Plug>(go-def)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+"au FileType go nmap <Leader>gv <Plug>(go-vec)
+au FileType go nmap <Leader>gi <Plug>(go-info)
+au FileType go nmap <Leader>gR :<c-u>GoReferrers<cr>
+au FileType go nmap <Leader>gI <Plug>(go-implements)
 
-"au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gR <Plug>(go-rename)
+
+" https://github.com/fatih/vim-go#using-with-syntastic
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 au BufNewFile,BufRead *.go :TagbarOpen<cr>
-
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -737,11 +746,13 @@ NeoBundle 'ardagnir/vimbed'
 "  NeoBundle 'altercation/vim-colors-solarized'
 "  set background=dark
 
-try
-	 colorscheme desert
-	"  colorscheme solarized
-catch
-endtry
+
+"try
+"	colorscheme molokai
+"	 "colorscheme desert
+"	"  colorscheme solarized
+"catch
+"endtry
  
  set background=dark
 
@@ -752,11 +763,16 @@ if has("gui_running")
     set guitablabel=%M\ %t
 endif
 
+" To load molokai colorscmeme, Execute bellow.
+" cd $HOME/.vim; ln -s bundle/molokai/colors
+NeoBundle 'https://github.com/fatih/molokai.git'
+colorscheme molokai
+
 NeoBundle 'https://github.com/bling/vim-airline.git'
 let g:airline#extensions#tabline#enabled = 1
 
-NeoBundle 'https://github.com/zeekay/vice-colorful.git'
-NeoBundle 'https://github.com/zeekay/vim-color-switch.git'
+"NeoBundle 'https://github.com/zeekay/vice-colorful.git'
+"NeoBundle 'https://github.com/zeekay/vim-color-switch.git'
 
 " }}}
 
