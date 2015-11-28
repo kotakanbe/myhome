@@ -104,6 +104,8 @@ map <leader>q :q<cr>
 map <leader>en :cn<cr>
 map <leader>ep :cp<cr>
 
+map <leader>er :<c-u>edit<cr>
+
 " Fast editing of the .vimrc
 map <leader>Ee :e! ~/.vimrc<cr>
 map <leader>Ev :e! ~/.vimperatorrc<cr>
@@ -488,8 +490,18 @@ au BufReadPost *.go silent! !gotags -R -sort -silent . > tags &
 au BufNewFile,BufRead *.go set sw=4 noexpandtab ts=4 completeopt=menu,preview
 au FileType go compiler go
 
+
 let g:godef_split=1
-nnoremap <silent> <Leader>gd :GoDef<CR>
+"nnoremap <silent> <Leader>gd :GoDef<CR>
+nnoremap gt  :<C-u>GoDef<CR>
+
+au FileType go nmap <Leader>gv <Plug>(go-vet)
+au BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
+au BufWritePost,FileWritePost *.go execute 'GoVet' | cwindow
+
+"au FileType go nmap <Leader>gd <Plug>(go-doc)
+
+au BufNewFile,BufRead *.go :TagbarOpen<cr>
 
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
@@ -673,11 +685,18 @@ augroup END
 
 " => Python section {{{
 """"""""""""""""""""""""""""""
+" http://hikaru515.hatenablog.com/entry/2015/10/25/162530
+" execute below after installing
+"   cd ~/.vim/bundle/jedi-vim && git submodule update --init
+NeoBundle 'davidhalter/jedi-vim'
+"let g:jedi#force_py_version = 3
 augroup python
       autocmd FileType python
         \  setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
+        \| setlocal completeopt-=preview
 augroup END
 "}}}
+
 
 " => Markdown section {{{
 """"""""""""""""""""""""""""""
@@ -781,6 +800,8 @@ nnoremap <Leader>et :EvervimListTags<CR>
 "      \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
 "  omap s :normal vs<CR>
 "}}}
+
+NeoBundle 'https://github.com/Valloric/YouCompleteMe.git'
 
 " => t9md/vim-choosewin {{{
 NeoBundle 'https://github.com/t9md/vim-choosewin.git'
