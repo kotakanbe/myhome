@@ -12,6 +12,9 @@
 "   c-i  forward to next jumped
 "   {  back to previous paragraph
 "   }  forward to next paragraph
+"   zt cursor line to top
+"   zz cursor line to middle
+"   zb cursor line to Bottom
 " 
 " - vim-easymotion
 "   <space><space>w forward to word
@@ -51,6 +54,13 @@ NeoBundle 'https://github.com/Shougo/vimproc.vim.git'
 
 " => General {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
+let mapleader = "\<Space>"
+let g:mapleader = "\<Space>"
+
+" Tweak ESC to be 'jk' typed fast
+imap jk <ESC>
+
 " Sets how many lines of history VIM has to remember
 set history=300
 
@@ -78,10 +88,6 @@ set nobackup
 set nowb
 set noswapfile
 
-" http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
-let mapleader = "\<Space>"
-let g:mapleader = "\<Space>"
-
 " Fast saving
 nmap <leader>w :w!<cr>:redraw!<cr>
 
@@ -91,8 +97,8 @@ nmap <leader>o :CtrlP<cr>
 
 nmap <Leader><Leader> V
 
-vmap <Leader>y "+y
-vmap <Leader>d "+d
+"vmap <Leader>y "+y
+"vmap <Leader>d "+d
 "  nmap <Leader>p "+p
 "  nmap <Leader>P "+P
 "  vmap <Leader>p "+p
@@ -239,6 +245,24 @@ endfunction
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
+
+" fold
+" http://stackoverflow.com/questions/7034215/is-there-a-way-to-expand-a-vim-fold-automatically-when-your-put-your-cursor-on-i
+nnoremap <silent> j :<c-u>call MoveUpDown('j', +1, 1)<cr>
+nnoremap <silent> k :<c-u>call MoveUpDown('k', -1, 1)<cr>
+nnoremap <silent> gj :<c-u>call MoveUpDown('gj', +1, 1)<cr>
+nnoremap <silent> gk :<c-u>call MoveUpDown('gk', -1, 1)<cr>
+nnoremap <silent> <c-d> :<c-u>call MoveUpDown("\<lt>c-d>", +1, '&l:scroll')<cr>
+nnoremap <silent> <c-u> :<c-u>call MoveUpDown("\<lt>c-u>", -1, '&l:scroll')<cr>
+nnoremap <silent> <c-f> :<c-u>call MoveUpDown("\<lt>c-f>", +1, 'winheight("%")')<cr>
+nnoremap <silent> <c-b> :<c-u>call MoveUpDown("\<lt>c-b>", -1, 'winheight("%")')<cr>
+function! MoveUpDown(cmd, dir, ndef)
+    let n = v:count == 0 ? eval(a:ndef) : v:count
+    let l = line('.') + a:dir * n
+    silent! execute l . 'foldopen!'
+    execute 'norm! ' . n . a:cmd
+endfunction
+
 "}}}
 
 " motion {{{
@@ -275,7 +299,7 @@ nnoremap <silent> tr :NERDTree<CR>
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_safe_mode_by_default = 0
 nnoremap <silent> <Leader>fe :<C-u>VimFilerBufferDir -quit<CR>
-nnoremap <silent> <Leader>fi :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+"nnoremap <silent> <Leader>fi :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
 augroup vimrc
   autocmd FileType vimfiler call s:vimfiler_my_settings()
 augroup END
@@ -287,12 +311,20 @@ endfunction
 
 "  unite {{{
 NeoBundle 'https://github.com/Shougo/unite.vim.git'
-NeoBundle 'https://github.com/h1mesuke/unite-outline.git'
+"NeoBundle 'https://github.com/h1mesuke/unite-outline.git'
 NeoBundle 'https://github.com/tsukkee/unite-tag.git'
 NeoBundle 'https://github.com/tsukkee/unite-help.git'
-NeoBundle 'https://github.com/thinca/vim-unite-history.git'
+"NeoBundle 'https://github.com/thinca/vim-unite-history.git'
 NeoBundle 'https://github.com/tacroe/unite-mark.git'
 NeoBundle 'https://github.com/Shougo/neomru.vim'
+
+
+NeoBundle 'Shougo/neoyank.vim'
+let g:neoyank#limit=10000
+let g:neoyank#file=$HOME . '/.vim/yank_history.txt'
+nnoremap <leader>y :<C-u>Unite history/yank<CR>
+nnoremap <silent> [unite]y  :<C-u>Unite history/yank<CR>
+
 
 nnoremap    [unite]   <Nop>
 nmap    <leader>f [unite]
@@ -302,23 +334,23 @@ nnoremap [unite]u  :<C-u>Unite<Space>
 nnoremap <silent> [unite];  :<C-u>Unite history/command command<CR>
 "nnoremap <silent> [unite]a  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
 "nnoremap <silent> [unite]a  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
-nnoremap <silent> [unite]l  :<C-u>Unite -buffer-name=files file<CR>
-nnoremap <silent> [unite]f  :<C-u>Unite -buffer-name=files file_rec<CR>
+"nnoremap <silent> [unite]l  :<C-u>Unite -buffer-name=files file<CR>
+"nnoremap <silent> [unite]f  :<C-u>Unite -buffer-name=files file_rec<CR>
 "nnoremap <silent> [unite]rm  :<C-u>Unite ref/man<CR>
 "nnoremap <silent> [unite]re  :<C-u>Unite ref/erlang<CR>
 "nnoremap <silent> [unite]rr  :<C-u>Unite ref/refe<CR>
 nnoremap <silent> [unite]b  :<C-u>Unite buffer<CR>
-nnoremap <silent> [unite]m  :<C-u>Unite file_mru<CR>
-nnoremap <silent> [unite]j  :<C-u>Unite mark<CR>
-nnoremap <silent> [unite]o  :<C-u>Unite outline:!<CR>
-nnoremap <silent> [unite]p  :<C-u>Unite outline -auto-preview<CR>
+nnoremap <silent> [unite]f  :<C-u>Unite file_mru<CR>
+nnoremap <silent> [unite]m  :<C-u>Unite mark<CR>
+nnoremap <silent> [unite]j  :<C-u>Unite jump<CR>
+"nnoremap <silent> [unite]o  :<C-u>Unite outline:!<CR>
+"nnoremap <silent> [unite]p  :<C-u>Unite outline -auto-preview<CR>
 nnoremap <silent> [unite]g  :<C-u>Unite grep<CR>
 nnoremap <silent> [unite]t  :<C-u>UniteWithCursorWord -buffer-name=tag tag<CR>
 nnoremap <silent> [unite]h  :<C-u>Unite help<CR>
 nnoremap <silent> [unite]t  :<C-u>Unite tag<CR>
+nnoremap <silent> [unite]c  :<C-u>Unite change<CR>
 
-let g:unite_source_history_yank_enable = 1
-nnoremap <silent> [unite]y  :<C-u>Unite history/yank<CR>
 
 nnoremap <silent> [unite]s  :<C-u>Unite snippet<CR>
 
@@ -361,6 +393,11 @@ vnoremap /g y:Unite grep::-iHRn:<C-R>=escape(@", '\\.*$^[]')<CR><CR>
 " }}}
 
 " programing {{{
+
+" Investigate.vim 
+NeoBundle 'rizzatti/dash.vim'
+nmap <silent> <leader>d <Plug>DashSearch
+
 "
 "NeoBundle 'https://github.com/vim-scripts/taglist.vim.git'
 NeoBundle 'https://github.com/houtsnip/vim-emacscommandline.git'
@@ -487,13 +524,13 @@ au BufWritePre *.go Fmt
 au BufWritePost *.go silent! !gotags -R -sort -silent . > tags &
 au BufReadPost *.go silent! !gotags -R -sort -silent . > tags &
 
-au BufNewFile,BufRead *.go set sw=4 noexpandtab ts=4 completeopt=menu,preview
+au BufNewFile,BufRead *.go set sw=4 noexpandtab ts=4 completeopt=menu
 au FileType go compiler go
 
 "  https://github.com/fatih/vim-go#mappings
 "  nnoremap gt  :<C-u>GoDef<CR>
 let g:godef_split=1
-au FileType go nmap <leader>gr <Plug>(go-run)
+"au FileType go nmap <leader>gr <Plug>(go-run)
 au FileType go nmap <leader>gb <Plug>(go-build)
 au FileType go nmap <leader>gt <Plug>(go-test)
 au FileType go nmap <leader>gC <Plug>(go-coverage)
@@ -502,13 +539,15 @@ au FileType go nmap <Leader>gg <Plug>(go-def)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
 "au FileType go nmap <Leader>gv <Plug>(go-vec)
 au FileType go nmap <Leader>gi <Plug>(go-info)
-au FileType go nmap <Leader>gR :<c-u>GoReferrers<cr>
+au FileType go nmap <Leader>gr :<c-u>GoReferrers<cr>
 au FileType go nmap <Leader>gI <Plug>(go-implements)
 
 au FileType go nmap <Leader>gR <Plug>(go-rename)
 
 " https://github.com/fatih/vim-go#using-with-syntastic
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+"let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_go_checkers = ['golint', 'govet', 'go']
+let g:syntastic_aggregate_errors = 1
 "let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 au BufNewFile,BufRead *.go :TagbarOpen<cr>
@@ -600,7 +639,7 @@ inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#CompleteTags
@@ -679,6 +718,46 @@ augroup javascript
       autocmd FileType javascript
 	\ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
 augroup END
+
+NeoBundle "pangloss/vim-javascript"
+
+" TODO 
+" http://qiita.com/alpaca_taichou/items/056a4c42fe7a928973e6
+
+" http://layzie.hatenablog.com/entry/20130122/1358811539
+"  NeoBundle 'jiangmiao/simple-javascript-indenter'
+" この設定入れるとshiftwidthを1にしてインデントしてくれる
+"  let g:SimpleJsIndenter_BriefMode = 1
+" この設定入れるとswitchのインデントがいくらかマシに
+"  let g:SimpleJsIndenter_CaseIndentLevel = -1
+"
+"NeoBundle "maksimr/vim-jsbeautify"
+"  NeoBundleLazy 'jelera/vim-javascript-syntax', {'autoload':{'filetypes':['javascript']}}
+"  NeoBundle "elzr/vim-json"
+"NeoBundle "othree/javascript-libraries-syntax.vim"
+"NeoBundle 'othree/yajs.vim'
+
+" https://github.com/ternjs/tern_for_vim
+NeoBundle 'marijnh/tern_for_vim', {
+  \ 'build': {
+  \   'others': 'npm install'
+  \}}
+
+au FileType javascript nmap <leader>gg :TernDef<cr>
+au FileType javascript nmap <leader>gd :TernDoc<cr>
+au FileType javascript nmap <leader>gt :TernType<cr>
+au FileType javascript nmap <leader>gr :TernRefs<cr>
+au FileType javascript nmap <leader>gR :TernRename<cr>
+
+" https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
+NeoBundle 'mxw/vim-jsx'
+let g:jsx_ext_required = 0 " Allow JSX in normal JS files
+let g:syntastic_javascript_checkers = ['eslint']
+
+"  let g:syntastic_javascript_checker = "jshint"
+
+"  jshint + jsxが設定できない場合は、eslintを使う。
+"  https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
 "}}}
 
 " => Ruby section {{{
@@ -728,10 +807,13 @@ NeoBundle 'plasticboy/vim-markdown'
 " }}}
 
 " => open-browser.vim {{{
-"  NeoBundle 'tyru/open-browser.vim.git'
-"  let g:netrw_nogx = 1 " disable netrw's gx mapping.
+NeoBundle 'tyru/open-browser.vim.git'
+let g:netrw_nogx = 1 " disable netrw's gx mapping.
 "  vnoremap <leader>b <Plug>(openbrowser-smart-search)
-" }}}
+nmap gx <Plug>(openbrowser-smart-search)
+vmap gx <Plug>(openbrowser-smart-search)
+
+"}}}
 
 " vimbed embeded vim in other programs{{{
 " used by https://github.com/ardagnir/athame
@@ -781,14 +863,17 @@ let g:airline#extensions#tabline#enabled = 1
 " window
 "NeoBundle 'https://github.com/vim-scripts/ZoomWin.git'
 
+NeoBundle 'simeji/winresizer'
+
+
 " => outliner {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/lukaszkorecki/workflowish
 " zq で現在の要素にズーム
 " zp で親要素に移動
 " https://github.com/lukaszkorecki/workflowish
-NeoBundle 'https://github.com/lukaszkorecki/workflowish.git'
-"NeoBundle 'https://github.com/vimoutliner/vimoutliner.git'
+"  NeoBundle 'https://github.com/lukaszkorecki/workflowish.git'
+NeoBundle 'https://github.com/vimoutliner/vimoutliner.git'
 "}}}
 
 " => terryma/vim-expand-region {{{
@@ -817,7 +902,7 @@ nnoremap <Leader>et :EvervimListTags<CR>
 "  omap s :normal vs<CR>
 "}}}
 
-NeoBundle 'https://github.com/Valloric/YouCompleteMe.git'
+"NeoBundle 'https://github.com/Valloric/YouCompleteMe.git'
 
 " => t9md/vim-choosewin {{{
 NeoBundle 'https://github.com/t9md/vim-choosewin.git'
