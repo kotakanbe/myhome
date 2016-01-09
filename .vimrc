@@ -716,7 +716,7 @@ augroup END
 """"""""""""""""""""""""""""""
 augroup javascript
       autocmd FileType javascript
-	\ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
+	\ setlocal softtabstop=4 shiftwidth=4 tabstop=4 expandtab
 augroup END
 
 NeoBundle "pangloss/vim-javascript"
