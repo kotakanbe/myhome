@@ -2,7 +2,7 @@
 "   1. install neobundle https://github.com/Shougo/neobundle.vim
 "   2. ghq get https://github.com/kotakanbe/myhome.git
 "   3. cd $HOME/.vim
-"   4. ln -s /path/to/myhome/dict 
+"   4. ln -s /path/to/myhome/dict
 "
 " # Tips
 " - cursor moveing memo http://qiita.com/takeharu/items/9d1c3577f8868f7b07b5
@@ -15,13 +15,13 @@
 "   zt cursor line to top
 "   zz cursor line to middle
 "   zb cursor line to Bottom
-" 
+"
 " - vim-easymotion
 "   <space><space>w forward to word
 "   <space><space>b back to word
 "
 " - vim-surround
-"   surround in Visual mode 
+"   surround in Visual mode
 "     curwor on hello , press vvS"
 "     "hello"
 "
@@ -64,8 +64,11 @@ imap jk <ESC>
 " Sets how many lines of history VIM has to remember
 set history=300
 
+set visualbell t_vb=
+set noerrorbells
+
 " Enable syntax highlighting
-syntax enable 
+syntax enable
 
 "  set list		" 不可視文字表示
 "  set listchars=tab:>\ \,trail:_,extends:>,precedes:<
@@ -149,8 +152,8 @@ set smartindent         " 新しい行のインデントを現在行と同じ量
 
 " set system $PATH
 " http://vim.1045645.n5.nabble.com/setting-vim-path-to-coincide-always-with-the-system-path-td1171918.html
-" let &path=tr(expand("$PATH"),":",",") 
-let &path=tr(expand("$PATH"),":",",") 
+" let &path=tr(expand("$PATH"),":",",")
+let &path=tr(expand("$PATH"),":",",")
 
 " Smart way to move btw. windows
 map <C-j> <C-W>j
@@ -263,11 +266,16 @@ function! MoveUpDown(cmd, dir, ndef)
     execute 'norm! ' . n . a:cmd
 endfunction
 
+" whitespace
+NeoBundle 'ntpeters/vim-better-whitespace'
+autocmd BufWritePre * StripWhitespace
+
 "}}}
 
 " motion {{{
 "
 " <leader><leader>j or k or f or w or b
+" http://haya14busa.com/vim-easymotion-ver-3-dot-0-overwin-motions/
 NeoBundle 'https://github.com/Lokaltog/vim-easymotion.git'
 
 " s**
@@ -295,7 +303,7 @@ NeoBundle 'scrooloose/nerdtree'
 let g:NERDTreeShowBookmarks=1		"起動時にBookmarkを表示
 nnoremap <silent> tr :NERDTree<CR>
 
-"vimfiler 
+"vimfiler
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_safe_mode_by_default = 0
 nnoremap <silent> <Leader>fe :<C-u>VimFilerBufferDir -quit<CR>
@@ -384,7 +392,7 @@ let g:unite_source_grep_command = 'ack'
 let g:unite_source_grep_default_opts = '--nocolor --nogroup'
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 200
- 
+
 " unite-grepのキーマップ
 " 選択した文字列をunite-grep
 " https://github.com/shingokatsushima/dotfiles/blob/master/.vimrc
@@ -394,7 +402,7 @@ vnoremap /g y:Unite grep::-iHRn:<C-R>=escape(@", '\\.*$^[]')<CR><CR>
 
 " programing {{{
 
-" Investigate.vim 
+" Investigate.vim
 NeoBundle 'rizzatti/dash.vim'
 nmap <silent> <leader>d <Plug>DashSearch
 
@@ -550,7 +558,7 @@ let g:syntastic_go_checkers = ['golint', 'govet', 'go']
 let g:syntastic_aggregate_errors = 1
 "let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
-au BufNewFile,BufRead *.go :TagbarOpen<cr>
+"  au BufNewFile,BufRead *.go :TagbarOpen<cr>
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -671,7 +679,7 @@ let g:neosnippet#snippets_directory = [
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
- 
+
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
@@ -679,11 +687,14 @@ imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
 \: "\<TAB>"
- 
+
 " For snippet_complete marker.
 if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
+
+NeoBundle 'https://github.com/honza/vim-snippets'
+let g:neosnippet#enable_snipmate_compatibility = 1
 
 "  " Plugin key-mappings.
 "  imap <C-s>     <Plug>(neosnippet_expand_or_jump)
@@ -716,12 +727,14 @@ augroup END
 """"""""""""""""""""""""""""""
 augroup javascript
       autocmd FileType javascript
-	\ setlocal softtabstop=4 shiftwidth=4 tabstop=4 expandtab
+	\ setlocal softtabstop=2 shiftwidth=2 tabstop=2 expandtab
 augroup END
 
 NeoBundle "pangloss/vim-javascript"
 
-" TODO 
+NeoBundle "bentayloruk/vim-react-es6-snippets"
+
+" TODO
 " http://qiita.com/alpaca_taichou/items/056a4c42fe7a928973e6
 
 " http://layzie.hatenablog.com/entry/20130122/1358811539
@@ -798,7 +811,7 @@ augroup END
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'plasticboy/vim-markdown'
 
-"Markdown Preview Plus 
+"Markdown Preview Plus
 "  map <leader>md :MkdChrome<cr>
 "  command! MkdChrome call MkdChrome()
 "  function! MkdChrome()
@@ -835,7 +848,7 @@ NeoBundle 'ardagnir/vimbed'
 "	"  colorscheme solarized
 "catch
 "endtry
- 
+
  set background=dark
 
 if has("gui_running")
