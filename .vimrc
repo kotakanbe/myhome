@@ -35,6 +35,20 @@
 "
 " - vim-expand-region (tmux like window choise)
 "   - (normal mode)
+"
+" - Switch Buffer
+"   - <ENTER> to edit the selected buffer in the previous window
+"   - <C-V> to edit the selected buffer in a new vertical split
+"   - <C-S> to edit the selected buffer in a new horizontal split
+"   - <C-T> to edit the selected buffer in a new tab page
+"
+" - memolist
+"   - mn new memo
+"   - ml list memo
+"   - mg grep memo (grep with QFixGrep)
+" - QFixGrep
+"   - s<keyword> regrep in QuickFix
+
 
 "Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
@@ -90,6 +104,11 @@ set foldmethod=marker
 set nobackup
 set nowb
 set noswapfile
+
+if has('persistent_undo')
+  set undodir=~/.vim/undo
+  set undofile
+endif
 
 " Fast saving
 nmap <leader>w :w!<cr>:redraw!<cr>
@@ -160,6 +179,14 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
+
+"  map <D-j> <C-w>r
+"  map <D-k> <C-w>R
+"  map <D-l> <C-w>x
+
+
+
+NeoBundle "jeetsukumaran/vim-buffergator"
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>
@@ -269,6 +296,9 @@ endfunction
 " whitespace
 NeoBundle 'ntpeters/vim-better-whitespace'
 autocmd BufWritePre * StripWhitespace
+
+" save
+cmap w!! w !sudo tee >/dev/null %
 
 "}}}
 
@@ -421,6 +451,8 @@ NeoBundle 'https://github.com/thinca/vim-quickrun.git'
 
 " Git {{{
 NeoBundle 'https://github.com/airblade/vim-gitgutter.git'
+NeoBundle 'rhysd/committia.vim'
+
 " }}}
 
 " => for refactoring {{{
@@ -715,6 +747,12 @@ let g:neosnippet#enable_snipmate_compatibility = 1
 
 "}}}
 
+
+" => HTML section {{{
+NeoBundle "mattn/sonictemplate-vim"
+"}}}
+
+
 " => HTML section {{{
 """"""""""""""""""""""""""""""
 augroup html
@@ -899,12 +937,12 @@ vmap <C-v> <Plug>(expand_region_shrink)
 
 " => evervim {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'https://github.com/kakkyz81/evervim.git'
-let g:evervim_devtoken='S=s7:U=c4685:E=157262c3854:C=14fce7b0970:P=1cd:A=en-devtoken:V=2:H=2d9363484cb3304dc92e29293a0dc6f9'
-nnoremap <Leader>el :EvervimNotebookList<CR>
-nnoremap <Leader>es :EvervimSearchByQuery<Space>
-nnoremap <Leader>ec :EvervimCreateNote<CR>
-nnoremap <Leader>et :EvervimListTags<CR>
+"  NeoBundle 'https://github.com/kakkyz81/evervim.git'
+"  let g:evervim_devtoken='S=s7:U=c4685:E=157262c3854:C=14fce7b0970:P=1cd:A=en-devtoken:V=2:H=2d9363484cb3304dc92e29293a0dc6f9'
+"  nnoremap <Leader>el :EvervimNotebookList<CR>
+"  nnoremap <Leader>es :EvervimSearchByQuery<Space>
+"  nnoremap <Leader>ec :EvervimCreateNote<CR>
+"  nnoremap <Leader>et :EvervimListTags<CR>
 "}}}
 
 " => search and replace {{{
@@ -921,6 +959,26 @@ nnoremap <Leader>et :EvervimListTags<CR>
 NeoBundle 'https://github.com/t9md/vim-choosewin.git'
 nmap  -  <Plug>(choosewin)
 let g:choosewin_overlay_enable = 1
+"}}
+
+
+" => t9md/vim-choosewin {{{
+NeoBundle 'fuenor/qfixgrep'
+let QFixWin_EnableMode = 1
+let QFix_UseLocationList = 1
+"}}
+
+
+" => glidenote/memolist.vim {{{
+NeoBundle 'glidenote/memolist.vim'
+nnoremap <Leader>mn  :MemoNew<CR>
+nnoremap <Leader>ml  :MemoList<CR>
+nnoremap <Leader>mg  :MemoGrep<CR>
+let g:memolist_qfixgrep = 1
+let g:memolist_unite = 1
+let g:memolist_unite_source = "file_rec"
+"let g:memolist_unite_option = "-auto-preview -start-insert"
+"let g:memolist_ex_cmd = 'CtrlP'
 "}}}
 
 call neobundle#end()
@@ -934,4 +992,6 @@ filetype on
 filetype plugin on
 "filetype plugin indent on
 filetype indent on
+
+
 
