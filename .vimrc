@@ -84,6 +84,8 @@ set noerrorbells
 " Enable syntax highlighting
 syntax enable
 
+set synmaxcol=200
+
 "  set list		" 不可視文字表示
 "  set listchars=tab:>\ \,trail:_,extends:>,precedes:<
 
@@ -295,7 +297,7 @@ endfunction
 
 " whitespace
 NeoBundle 'ntpeters/vim-better-whitespace'
-autocmd BufWritePre * StripWhitespace
+autocmd BufWritePre *.go StripWhitespace
 
 " save
 cmap w!! w !sudo tee >/dev/null %
@@ -618,6 +620,10 @@ let g:tagbar_type_go = {
     \ 'ctagsbin'  : 'gotags',
     \ 'ctagsargs' : '-sort -silent'
     \ }
+
+" https://github.com/golang/lint
+set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
+autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
 
 " }}}
 
@@ -980,6 +986,10 @@ let g:memolist_unite_source = "file_rec"
 "let g:memolist_unite_option = "-auto-preview -start-insert"
 "let g:memolist_ex_cmd = 'CtrlP'
 "}}}
+
+" => glidenote/memolist.vim {{{
+NeoBundle 'powerman/vim-plugin-AnsiEsc'
+" }}}
 
 call neobundle#end()
 
