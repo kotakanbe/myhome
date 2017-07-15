@@ -129,8 +129,8 @@
   #root = ~/work
   #root = ~/work/go/src
   # http://masteries.papix.net/entry/2014-06-30-ghq.html
-  root = ~/.ghq
-  root = ~/.go/src
+  #root = ~/.ghq
+  root = ~/go/src
 
 [user]
 	name = kota kanbe

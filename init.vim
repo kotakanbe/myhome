@@ -31,6 +31,12 @@ Plug 'Blackrush/vim-gocode'
 Plug 'tyru/open-browser.vim'
 Plug 'terryma/vim-expand-region'
 Plug 't9md/vim-choosewin'
+Plug 'airblade/vim-gitgutter'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'SirVer/ultisnips'
+Plug 'nsf/gocode'
+
 
 " Initialize plugin system
 call plug#end()
@@ -176,7 +182,7 @@ nnoremap <silent> [unite];  :<C-u>Unite history/command command<CR>
 nnoremap <silent> [unite]b  :<C-u>Unite buffer<CR>
 nnoremap <silent> [unite]f  :<C-u>Unite file_mru<CR>
 nnoremap <silent> [unite]m  :<C-u>Unite mark<CR>
-nnoremap <silent> [unite]j  :<C-u>Unite jump<CR>
+nnoremap <silent> [unite]j  :<C-u>Unite jump<CR> "いままで飛んだところにジャンプ可能!!!!!!
 nnoremap <silent> [unite]g  :<C-u>Unite grep<CR>
 nnoremap <silent> [unite]t  :<C-u>UniteWithCursorWord -buffer-name=tag tag<CR>
 nnoremap <silent> [unite]h  :<C-u>Unite help<CR>
@@ -239,17 +245,30 @@ au FileType go compiler go
 let g:godef_split=1
 "au FileType go nmap <leader>gr <Plug>(go-run)
 au FileType go nmap <leader>gb <Plug>(go-build)
-au FileType go nmap <leader>gt <Plug>(go-test)
-au FileType go nmap <leader>gC <Plug>(go-coverage)
+au FileType go nmap <leader>gt <Plug>(go-test-func)
+au FileType go nmap <leader>gT <Plug>(go-coverage-toggle)
+
+au FileType go nmap <leader>gc <Plug>(go-callees)
+au FileType go nmap <leader>gC <Plug>(go-callers)
 
 au FileType go nmap <Leader>gg <Plug>(go-def)
+au FileType go nmap <Leader>gs <Plug>(go-def-stack)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
-"au FileType go nmap <Leader>gv <Plug>(go-vec)
-au FileType go nmap <Leader>gi <Plug>(go-info)
+" au FileType go nmap <Leader>gL <Plug>(go-lint)
+au FileType go nmap <Leader>gv <Plug>(go-vet)
+" au FileType go nmap <Leader>gi <Plug>(go-info)
+au FileType go nmap <Leader>gi :<c-u>GoSameIdsAutoToggle<cr>
 au FileType go nmap <Leader>gr :<c-u>GoReferrers<cr>
 au FileType go nmap <Leader>gI <Plug>(go-implements)
-
 au FileType go nmap <Leader>gR <Plug>(go-rename)
+au FileType go nmap <Leader>ge :<c-u>GoErrCheck<cr>
+au FileType go nmap <Leader>gw :<c-u>GoWhicherrs<cr>
+au FileType go nmap <Leader>ga <Plug>(go-alternate-vertical)
+au FileType go nmap <Leader>gl :<c-u>GoDecls<cr>
+au FileType go nmap <Leader>gL :<c-u>GoDeclsDir<cr>
+au FileType go nmap <Leader>gp :<c-u>GoPlay<cr>
+
+let g:go_auto_type_info = 1
 
 " https://github.com/fatih/vim-go#using-with-syntastic
 "let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
@@ -288,7 +307,8 @@ let g:tagbar_type_go = {
 
 " https://github.com/golang/lint
 "set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
-"autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
+" autocmd BufWritePost *.go execute 'GoLint' | cwindow
+" autocmd BufWritePost *.go execute 'GoErrCheck' | cwindow
 
 " open-browser
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
@@ -305,4 +325,73 @@ vmap <C-v> <Plug>(expand_region_shrink)
 " => t9md/vim-choosewin {{{
 nmap  -  <Plug>(choosewin)
 let g:choosewin_overlay_enable = 1
+"}}
+
+
+" => airblade/vim-gitgutter {{{
+" https://github.com/airblade/vim-gitgutter#cycle-through-hunks-in-all-buffers
+function! NextHunkAllBuffers()
+  let line = line('.')
+  GitGutterNextHunk
+  if line('.') != line
+    return
+  endif
+
+  let bufnr = bufnr('')
+  while 1
+    bnext
+    if bufnr('') == bufnr
+      return
+    endif
+    if !empty(GitGutterGetHunks())
+      normal! 1G
+      GitGutterNextHunk
+      return
+    endif
+  endwhile
+endfunction
+
+function! PrevHunkAllBuffers()
+  let line = line('.')
+  GitGutterPrevHunk
+  if line('.') != line
+    return
+  endif
+
+  let bufnr = bufnr('')
+  while 1
+    bprevious
+    if bufnr('') == bufnr
+      return
+    endif
+    if !empty(GitGutterGetHunks())
+      normal! G
+      GitGutterPrevHunk
+      return
+    endif
+  endwhile
+endfunction
+
+nmap <silent> ]c :call NextHunkAllBuffers()<CR>
+nmap <silent> [c :call PrevHunkAllBuffers()<CR>
+"}}
+
+" => Shougo/deoplete.nvim {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:deoplete#enable_at_startup = 1
+
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+let g:deoplete#sources#go#use_cache = 1
+let g:deoplete#sources#go#json_directory = '~/.local/share/nvim/plugged/deoplete-go/data/json/1.7.3/darwin_amd64'
+"}}
+
+" => SirVer/ultisnips {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+"let g:UltiSnipsEditSplit="vertical"
 "}}
