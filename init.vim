@@ -1,3 +1,4 @@
+" ~/.config/nvim/init.vim
 " Specify a directory for plugins (for Neovim: ~/.local/share/nvim/plugged)
 call plug#begin('~/.local/share/nvim/plugged')
 
@@ -29,6 +30,7 @@ Plug 'dgryski/vim-godef'
 Plug 'vim-jp/vim-go-extra'
 Plug 'Blackrush/vim-gocode'
 Plug 'tyru/open-browser.vim'
+Plug 'tyru/open-browser-github.vim'
 Plug 'terryma/vim-expand-region'
 Plug 't9md/vim-choosewin'
 Plug 'airblade/vim-gitgutter'
@@ -232,6 +234,9 @@ let g:syntastic_auto_loc_list=2
 " Golang
 set path+=$GOPATH/src/**
 let g:gofmt_command = 'goimports'
+let g:go_fmt_options = {
+	\ 'gofmt': '-s',
+	\ }
 au BufWritePre *.go Fmt
 "  au BufWritePost *.go !gotags . -R > tags
 au BufWritePost *.go silent! !gotags -R -sort -silent . > tags &
